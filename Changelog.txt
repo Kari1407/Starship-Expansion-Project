@@ -27,3 +27,33 @@ v0.1-beta - 15/07/21 (DD/MM/YY)
 - Tweaked flaps a bit more
 - Tweaked Super Heavy thrust
 - Fixed Offset between Starship pods and body (the white line)
+
+v0.2-beta - 22/07/21 (DD/MM/YY) 
+
+- Added LifeSupport tank types to drop that dependency from tundra (still a dependency don't forget)
+- Added custom tanktypes for fuel (need help and feedback!)
+
+- Tweaked SuperHeavy Thrust and ISP
+- Tweaked GridFins to not actuate by default
+- Tweaked dry mass and Fuel on all parts that have both (decrease on both)
+- Tweaked Authority on flaps
+- Tweaked Cryo Rvac thrust to match new mass and fuel values (decrease in 50%)
+
+- Fixed Starship skirt not shielding engines (need legs to be folded!)
+- Fixed flaps default authority control being bigger than total range
+
+-- Extras --
+
+- Added Fuel Switch to Cryo Raptors
+- Added patch to remove smoke from Cryo Raptors
+- Fixed Tundra Vaccum Raptor topbase being disabled on both subtypes
+
+--- Realism Overhaul / RP1 ---
+
+- Tweaked Eletric charge on Starship to last about 10 days from 9 hours
+- Tweaked Starship avionics to be deep space
+- Twaked Docking node module on Starship to change only nodetype (need testing)
+
+- Fixed Waterfall plume on Cryo raptors
+- Fixed Tanker not receiving RealAntennas patch
+- Fixed 3 engine mode on SH being to powerfull
