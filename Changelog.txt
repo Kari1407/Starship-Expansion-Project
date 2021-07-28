@@ -57,3 +57,9 @@ v0.2-beta - 22/07/21 (DD/MM/YY)
 - Fixed Waterfall plume on Cryo raptors
 - Fixed Tanker not receiving RealAntennas patch
 - Fixed 3 engine mode on SH being to powerfull
+
+28/07/21 (DD/MM/YY) 
+
+- Fixed Raptor ActuateOut causing exceptions (maybe?)
+- Decreased LiftCoeff on GridFins to (hopefully) stop excessive roll
+- Removed DrawGauge from Oxidizer (why it was on anyway?)
