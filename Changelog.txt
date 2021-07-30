@@ -63,3 +63,15 @@ v0.2-beta - 22/07/21 (DD/MM/YY)
 - Fixed Raptor ActuateOut causing exceptions (maybe?)
 - Decreased LiftCoeff on GridFins to (hopefully) stop excessive roll
 - Removed DrawGauge from Oxidizer (why it was on anyway?)
+
+30/07/21 (DD/MM/YY)
+
+- Fixed Cryo NoSmoke patch not applying into RO
+
+--- RO/R1 ---
+
+- Divided patches into more files so ModuleManager will not ignore anything
+- Adjusted EC consumption 
+- Added Toggle to Starship avionics
+- Adjusted Raptor thrust in single and Cluster versions to match Elon's tweet (old Max thrust should be SL and not Vac)
+- Increased Dry Mass of SH and Starship
