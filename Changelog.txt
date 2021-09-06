@@ -75,3 +75,12 @@ v0.2-beta - 22/07/21 (DD/MM/YY)
 - Added Toggle to Starship avionics
 - Adjusted Raptor thrust in single and Cluster versions to match Elon's tweet (old Max thrust should be SL and not Vac)
 - Increased Dry Mass of SH and Starship
+
+05/09/21 (DD/MM/YY)
+
+- Added Modular Fuel Tanks patch
+- Added Deadly Reentry patch
+- Added FAR patch
+- Rebalanced Flaps
+- Removed Tundra Extra, it's now incorporated on Tundra itself
+- Updated Readme
