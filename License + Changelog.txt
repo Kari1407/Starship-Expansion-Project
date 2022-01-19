@@ -1,6 +1,8 @@
 All thanks to Sofie, Isaquest (Raptor), TheSpaceEngineer (Grid Fins), Kochi, Sam, Sputnik, Astroblivious, goob and every single member of my discord server that helped me develop this mod into existence.
 Special gratitude to Damon for mantaining and improving TundraExploration, the mod that started this all.
 
+LICENSE
+All configs are distributed under CC-NC-SA-4.0 License. All assets (all .dds, .png and .mu files) are distributed under an All Rights Reserved license. You may not redistribute or re-use these assets without express permission from the author. Updated on January 10th, 2022
 
 Version 1.0.0 
 
