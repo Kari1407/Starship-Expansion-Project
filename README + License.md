@@ -19,7 +19,7 @@ You can check my roadmap on https://trello.com/b/UPblvcar/karis-roadmap
 
 ## Discord
 I also have a discord server, enter for updates, dev talk or to have fun 
- https://discord.gg/CQzk9H84pr
+https://discord.gg/CQzk9H84pr
 
 ## IVA'S
 Don't count on those, I do not know nor do I want to do them, but If you want to do a good IVA I'm open to put it on the mod.

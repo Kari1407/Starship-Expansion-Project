@@ -1,0 +1,13 @@
+All thanks to Sofie, Isaquest (Raptor), TheSpaceEngineer (Grid Fins), Kochi, Sam, Sputnik, Astroblivious, goob and every single member of my discord server that helped me develop this mod into existence.
+Special gratitude to Damon for mantaining and improving TundraExploration, the mod that started this all.
+
+
+Version 1.0.0 
+
+- Official Release
+
+Version 0.*
+
+- First commit, Revamps, a lot of mistakes and bug fixes
+- Just a lot of stuff that I can't write here
+
