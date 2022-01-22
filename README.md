@@ -2,13 +2,13 @@
 Starship Expansion Project is a mod being developed by me, Kari, with contribution from the community, this mod aims to give players a more up to date version of the Starship vehicle by SpaceX. This mod is not 1:1 even if it looks like it is.
 
 ### Mandatory Mods:
-- Tundra Exploration
 - B9 Part Switch
 - Waterfall
 - ModuleManager
 
 ### Recommended Mods:
 - Starship Launch Expansion
+- Tundra Exploration
 - Textures Unlimited
 - Modular Launch Pads
 - Flight Manager for Reusable Stages (FMRS)

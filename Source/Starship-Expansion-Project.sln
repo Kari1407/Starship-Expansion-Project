@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Starship-Expansion-Project", "Starship-Expansion-Project.csproj", "{AA25C009-E9BE-4673-87FA-B01A3F107C33}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AA25C009-E9BE-4673-87FA-B01A3F107C33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA25C009-E9BE-4673-87FA-B01A3F107C33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA25C009-E9BE-4673-87FA-B01A3F107C33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA25C009-E9BE-4673-87FA-B01A3F107C33}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C62173EF-B953-4423-8C2A-0CC8AEA858B8}
+	EndGlobalSection
+EndGlobal
