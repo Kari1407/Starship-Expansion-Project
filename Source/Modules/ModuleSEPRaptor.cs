@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using TundraExploration.Utils;
 using UnityEngine;
 
-namespace StarshipExplorationProject.Modules
+namespace StarshipExpansionProject.Modules
 {
     public class ModuleSEPRaptor : PartModule
     {
