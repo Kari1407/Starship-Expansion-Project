@@ -7,8 +7,8 @@
     <ProjectGuid>{AA25C009-E9BE-4673-87FA-B01A3F107C33}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>StarshipExplorationProject</RootNamespace>
-    <AssemblyName>StarshipExplorationProject</AssemblyName>
+    <RootNamespace>StarshipExpansionProject</RootNamespace>
+    <AssemblyName>StarshipExpansionProject</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -84,7 +84,6 @@
     <Compile Include="Modules\ModuleSEPControlSurface.cs" />
     <Compile Include="Modules\ModuleSEPRaptor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="TundraInstallChecker.cs" />
     <Compile Include="Utils\Vector3Renderer.cs" />
     <Compile Include="Utils\Vector3Utils.cs" />
   </ItemGroup>

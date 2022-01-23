@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using TundraExploration.Utils;
 using UnityEngine;
 
-namespace StarshipExplorationProject
+namespace StarshipExpansionProject
 {
     public class ModuleSEPControlSurface : ModuleLiftingSurface, IMultipleDragCube, ITorqueProvider
     {
