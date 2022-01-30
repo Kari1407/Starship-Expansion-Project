@@ -4,6 +4,14 @@ Special gratitude to Damon for mantaining and improving TundraExploration, the m
 LICENSE
 All configs are distributed under CC-NC-SA-4.0 License. All assets (all .dds, .png and .mu files) are distributed under an All Rights Reserved license. You may not redistribute or re-use these assets without express permission from the author. Updated on January 10th, 2022
 
+Version 1.0.1 
+
+- Fixed TU being applied to cluster raptors
+- Fixed a few descriptions
+- Fixed compatibility with pathfinder mod
+- Fixed RO vents Exploding
+- Fixed plugin name
+
 Version 1.0.0 
 
 - Official Release
