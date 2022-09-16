@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TundraExploration.Utils;
 using UnityEngine;
 
 namespace StarshipExpansionProject.Modules
 {
     public class ModuleSEPRaptor : PartModule
     {
-        [KSPField]
+        public const string MODULENAME = "ModuleSEPRaptor";
+
         public bool enableActuateOut = true;
+
+        [KSPField(guiActive = false, isPersistant = true)]
+        private bool IsActuated = false;
 
         [KSPField]
         public float gimbalOutRange = 10f;
@@ -62,7 +61,7 @@ namespace StarshipExpansionProject.Modules
                 List<ModuleGimbal> sortedmodules = new List<ModuleGimbal>();
                 for (int i = 0; i < modules.Count; i++)
                 {
-                    if (modules[i].part.Modules.Contains("ModuleSEPRaptor"))
+                    if (modules[i].part.Modules.Contains(MODULENAME))
                     {
                         sortedmodules.Add(modules[i]);
                     }
@@ -146,12 +145,19 @@ namespace StarshipExpansionProject.Modules
                 gimbalLock = gimbalModule.gimbalLock;
                 gimbalModule.Fields["gimbalLock"].guiInteractable = false;
                 gimbalModule.gimbalLock = true;
+                IsActuated = true;
             }
             else
             {
                 gimbalModule.Fields["gimbalLock"].guiInteractable = true;
                 gimbalModule.gimbalLock = gimbalLock;
+                IsActuated = false;
             }
+        }
+
+        public override void OnLoad(ConfigNode node)
+        {
+            actuateOut = IsActuated;
         }
 
         public void FixedUpdate()
@@ -174,6 +180,7 @@ namespace StarshipExpansionProject.Modules
 
                     gimbalModule.initRots[i] = origGimbalRots[i] * Quaternion.AngleAxis(lerped, localAxis);
                 }
+
             }
             else
             {
@@ -185,6 +192,11 @@ namespace StarshipExpansionProject.Modules
 
                     gimbalModule.initRots[i] = origGimbalRots[i] * Quaternion.AngleAxis(lerped, localAxis);
                 }
+            }
+            //AffectSymmetricalParts();
+            if (actuateOut != IsActuated)
+            {
+                CheckGimbal();
             }
         }
 
