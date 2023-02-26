@@ -1,18 +1,32 @@
 # Starship Expansion Project
-Starship Expansion Project is a mod being developed by me, Kari, with contribution from the community, this mod aims to give players a more up to date version of the Starship vehicle by SpaceX. This mod is not 1:1 even if it looks like it is.
+Starship Expansion Project (SEP) is a mod being developed by me, Kari, and our amazing team of over 10 people. Our project aims to bring our intepretation of the Starship vehicle by SpaceX into Kerbal Space Program. While a lot of the design choices are based on the actual vehicle sitting on Boca Chica, creative freedom is used to expand our mod even further.
 
-### Mandatory Mods:
+### Dependencies:
 - B9 Part Switch
 - Waterfall
 - ModuleManager
 
 ### Recommended Mods:
-- Starship Launch Expansion
-- Tundra Exploration
 - Textures Unlimited
+- Tundra Exploration
+- Kerbal Joint Reinforcement (Next or Continued)
+- Starship Launch Expansion
+
+### Suggested Mods:
 - Modular Launch Pads
 - Flight Manager for Reusable Stages (FMRS)
 - Trajectories
+- HullCameraVDS & NeptuneCamera
+
+### IVA Dependencies
+- SEP
+- Near Future Props
+- Reviva
+- Free IVA
+
+### IVA Recommended Mods
+- ASET Props
+- JSI Advanced Transparent Pods
 
 ## Roadmap
 You can check my roadmap on https://trello.com/b/UPblvcar/karis-roadmap
@@ -21,8 +35,12 @@ You can check my roadmap on https://trello.com/b/UPblvcar/karis-roadmap
 I also have a discord server, enter for updates, dev talk or to have fun 
 https://discord.gg/CQzk9H84pr
 
-## IVA'S
-Don't count on those, I do not know nor do I want to do them, but If you want to do a good IVA I'm open to put it on the mod.
+## Know Issues
+- 	
 
 ## LICENSE
-All configs are distributed under CC-NC-SA-4.0 License. All assets (all .dds, .png and .mu files) are distributed under an All Rights Reserved license. You may not redistribute or re-use these assets without express permission from the author. Updated on January 10th, 2022
+All configs are distributed under CC-NC-SA-4.0 license. 
+Nertea's HabUtils.dll is distributed under MIT license. 
+All assets (all .dds, .png and .mu files) alongside with our StarshipExpansionProject.dll are distributed under an All Rights Reserved license. 
+
+You may not redistribute or re-use these assets without express permission from the author. Updated on February 25th, 2023

@@ -1,8 +1,27 @@
-All thanks to Sofie, Isaquest (Raptor), TheSpaceEngineer (Grid Fins), Kochi, Sam, Sputnik, Astroblivious, goob and every single member of my discord server that helped me develop this mod into existence.
+All thanks to Sofie, Isaquest, Janus92, Kochi, Sam, Sputnik, goob and every single member of my discord server that helped me develop this mod into existence.
 Special gratitude to Damon for mantaining and improving TundraExploration, the mod that started this all.
 
 LICENSE
-All configs are distributed under CC-NC-SA-4.0 License. All assets (all .dds, .png and .mu files) are distributed under an All Rights Reserved license. You may not redistribute or re-use these assets without express permission from the author. Updated on January 10th, 2022
+All configs are distributed under CC-NC-SA-4.0 license. Nertea's HabUtils.dll is distributed under MIT license. All assets (all .dds, .png and .mu files) alongside with our StarshipExpansionProject.dll are distributed under an All Rights Reserved license. You may not redistribute or re-use these assets without express permission from the author. Updated on February 25th, 2023
+
+
+Version 2.0.0
+
+- Completely overhaul of all parts, more details below
+- Added IVA by Janus92
+- Added Ship Legs with Nertea's HabUtils plugin
+- Added Hullcam & NeptuneCamera support
+- Added custom TU textures for better support
+- Added Paint options for Ship
+- Added B4 and B7 AeroCovers switch
+- Added B4 and B7 Grid fin switch
+- Added "Jaw" variant for the cargo door
+- Added Custom Waterfall plumes for everything that needs them
+- Added Variants for the raptor plume
+- Added a custom module allowing to change B9PS subtypes with action groups
+- Added a Raptor booster variant
+- Updated Raptor Engines to be closer to Raptor 2
+- Unified Booster Engine Cluster with a custom plugin to a single part
 
 Version 1.0.1 
 

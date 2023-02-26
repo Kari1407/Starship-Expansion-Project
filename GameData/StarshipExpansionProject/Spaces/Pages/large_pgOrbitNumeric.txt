@@ -1,0 +1,20 @@
+﻿[#00FF00FF]        ORBITING: {1,-15}       STAGE: {0:00} $&$STAGE ORBITBODY 
+[#FFFFFFFF]VELOCITY: [#00FF00FF]{0:SIP_10.1}m/s  [#FFFFFFFF]ALT ASL: [#00FF00FF]{1:SIP_8.3}m  $&$ORBTSPEED ALTITUDE
+[#FFFFFFFF]¥¥¥¥¥¥NODE ETA¥¥¥¥¥¥¿¥¥¥¥¥ΔV:¥¥¿THROTTLE¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥
+[#00FF00FF]{0,17:KDT+yy:ddd:hh:mm:ss.f}  [#FFFFFFFF]½[#00FF00FF]{1,9:0.00} [#FFFFFFFF]½   [#00FF00FF]{2,5:P0} $&$ MNODETIMESECS MNODEDV THROTTLE
+[#FFFFFFFF]¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¾¥¥¥¥¥¥¥¥¥¥¾¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥
+[#FFFFFFFF] ApA:  [#00FF00FF]{0:SIP_6.1}m   [#FFFFFFFF]INC:  [#00FF00FF]{1,7:0.000}° $&$APOAPSIS INCLINATION
+[#FFFFFFFF] PeA:  [#00FF00FF]{0:SIP_6.1}m   [#FFFFFFFF]ECC:  [#00FF00FF]{1,7:0.000} $&$PERIAPSIS ECCENTRICITY
+[#FFFFFFFF] ApT: [#00FF00FF]{0:KDTyy:ddd:hh:mm:ss.f}  $&$TIMETOAPSECS
+[#FFFFFFFF] PeT:[#00FF00FF]{0:KDT-yy:ddd:hh:mm:ss.f}  $&$TIMETOPESECS
+[#FFFFFFFF]  OP: [#00FF00FF]{0:KDTyy:ddd:hh:mm:ss.f}$&$ORBPERIODSECS
+[#FFFFFFFF]¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥
+[#FFFFFFFF]{1:"TGT:        ";"";""} [#FF00FFFF]{0}{1:;"                                          ";""} $&$ TARGETNAME TARGETEXISTS
+{1:;"                                                             ";""}[#FFFFFFFF]TO ☋:       [#00FF00FF]{0:KDT-yy:ddd:hh:mm:ss.f} $&$ TIMETOANWITHTARGETSECS TARGETEXISTS
+{1:;"                                                             ";""}[#FFFFFFFF]TO ☊:       [#00FF00FF]{0:KDT-yy:ddd:hh:mm:ss.f} $&$ TIMETODNWITHTARGETSECS TARGETEXISTS
+{1:;"                                                             ";""}[#FFFFFFFF]TGT PERIOD:  [#00FF00FF]{0:KDTyy:ddd:hh:mm:ss.f} $&$ TARGETORBPERIODSECS TARGETEXISTS
+{1:;"                                                             ";""}[#FFFFFFFF]TGT TO AP:   [#00FF00FF]{0:KDTyy:ddd:hh:mm:ss.f} $&$ TARGETTIMETOAPSECS TARGETEXISTS
+{1:;"                                                             ";""}[#FFFFFFFF]TGT TO PE:  [#00FF00FF]{0:KDT-yy:ddd:hh:mm:ss.f} $&$ TARGETTIMETOPESECS TARGETEXISTS
+{1:;"                                                             ";""}[#FFFFFFFF]R INC:    [#00FF00FF]{0:0.000}° [#FFFFFFFF] PHASE:[#00FF00FF] {2:000.0}° [#FFFFFFFF]   ETA:[#00FF00FF]{3:MET-h:mm:ss.f}s $&$RELATIVEINCLINATION TARGETEXISTS TARGETBODYPHASEANGLE TARGETCLOSESTAPPROACHTIME
+{0:;"                                                             ";""}[#FFFFFFFF]TGT AP: [#00FF00FF]{1:SIP_8}m    [#FFFFFFFF]PE: [#00FF00FF]{2:SIP_8}m [#FFFFFFFF]APR:[#00FF00FF]{3:SIP_6.1}m $&$ TARGETEXISTS TARGETAPOAPSIS TARGETPERIAPSIS TARGETCLOSESTAPPROACHDISTANCE
+{0:;"                                                             ";""}[#FFFFFFFF]TGT ECC:  [#00FF00FF]{1:0.000}     [#FFFFFFFF]VEL: [#00FF00FF]{2:SIP_8}m/s$&$ TARGETEXISTS TARGETECCENTRICITY TARGETORBITALVEL
