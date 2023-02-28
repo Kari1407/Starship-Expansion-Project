@@ -1,5 +1,5 @@
 # Starship Expansion Project
-Starship Expansion Project (SEP) is a mod being developed by me, Kari, and our amazing team of over 10 people. Our project aims to bring our intepretation of the Starship vehicle by SpaceX into Kerbal Space Program. While a lot of the design choices are based on the actual vehicle sitting on Boca Chica, creative freedom is used to expand our mod even further.
+Starship Expansion Project (SEP) is a mod being developed by me, Kari, and our amazing team. Our project aims to bring our intepretation of the Starship vehicle by SpaceX into Kerbal Space Program. While a lot of the design choices are based on the actual vehicle sitting on Boca Chica, creative freedom is used to expand our mod even further.
 
 ### Dependencies:
 - B9 Part Switch
@@ -13,16 +13,17 @@ Starship Expansion Project (SEP) is a mod being developed by me, Kari, and our a
 - Starship Launch Expansion
 
 ### Suggested Mods:
+- Community Resource Pack 
 - Modular Launch Pads
 - Flight Manager for Reusable Stages (FMRS)
 - Trajectories
 - HullCameraVDS & NeptuneCamera
 
 ### IVA Dependencies
-- SEP
 - Near Future Props
 - Reviva
 - Free IVA
+- Raster Prop Monitor
 
 ### IVA Recommended Mods
 - ASET Props
@@ -36,7 +37,7 @@ I also have a discord server, enter for updates, dev talk or to have fun
 https://discord.gg/CQzk9H84pr
 
 ## Know Issues
-- 	
+- MechJeb's PVG doesn't always understand booster cluster I.E It doesn't work
 
 ## LICENSE
 All configs are distributed under CC-NC-SA-4.0 license. 
