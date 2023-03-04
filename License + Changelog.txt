@@ -4,6 +4,17 @@ Special gratitude to Damon for mantaining and improving TundraExploration, the m
 LICENSE
 All configs are distributed under CC-NC-SA-4.0 license. Nertea's HabUtils.dll is distributed under MIT license. All assets (all .dds, .png and .mu files) alongside with our StarshipExpansionProject.dll are distributed under an All Rights Reserved license. You may not redistribute or re-use these assets without express permission from the author. Updated on February 25th, 2023
 
+Version 2.0.1
+
+- Increased MaxTemp on all ship parts
+- Fixed Ship RCS misaligned
+- Improved QoL on patches
+- Changed crew windows lights to white from yellow
+- Fixed Specular textures not loading on default ksp shader
+
+- Added extra patch for fixing booster cluster thrust while using LRTR with Rescaling on
+- Fixed Engine plumes (RO)
+- Fixed Vent on booster core (RO)
 
 Version 2.0.0
 
