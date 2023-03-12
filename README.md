@@ -37,7 +37,7 @@ I also have a discord server, enter for updates, dev talk or to have fun
 https://discord.gg/CQzk9H84pr
 
 ## Know Issues
-- MechJeb's PVG doesn't always understand booster cluster I.E It doesn't work
+
 
 ## LICENSE
 All configs are distributed under CC-NC-SA-4.0 license. 
