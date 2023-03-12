@@ -375,6 +375,6 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /Y "$(TargetPath)" "E:\KSP Modding\GameData\StarshipExpansionProject\Plugin"
-xcopy /Y "$(TargetPath)" "C:\Users\Sofie\Documents\GitHub\SEP-Private\GameData\StarshipExpansionProject\Plugin"</PostBuildEvent>
+xcopy /Y "$(TargetPath)" "C:\Users\Sofie\Documents\GitHub\Starship-Expansion-Project\GameData\StarshipExpansionProject\Plugin"</PostBuildEvent>
   </PropertyGroup>
 </Project>
