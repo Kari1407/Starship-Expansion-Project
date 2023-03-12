@@ -961,7 +961,8 @@ namespace StarshipExpansionProject.Modules
             {
                 if (EngineModules[i].engineID == AllEngineID)
                 {
-                    //EngineModules[i].maxThrust = (RBCount + MiddleRCCount + CenterRCCount) * SingleEngineThrust;
+                    EngineModules[i].maxThrust = (RBCount + MiddleRCCount + CenterRCCount) * SingleEngineThrust; //Set maxthrust for mechjeb PVG
+
                     Debug.Log($"[{MODULENAME}] Updating Thrust for engine with ID: {EngineModules[i].engineID}");
                     EngineModules[i].maxFuelFlow = (float)((RBCount + MiddleRCCount + CenterRCCount) * SingleEngineThrust / EngineModules[i].atmosphereCurve.Curve.keys[0].value / 9.80665);
                     if (SingleMinEngineThrust > 0)
@@ -973,10 +974,12 @@ namespace StarshipExpansionProject.Modules
                     if (RBCount + MiddleRCCount + CenterRCCount == 0)
                     {
                         EngineModules[i].isEnabled = false;
+                        EngineModules[i].SetStagingState(false);
                     }
                     else if (!EngineModules[i].isEnabled && SwitchActive && SwitchActiveID == 0)
                     {
                         EngineModules[i].isEnabled = true;
+                        EngineModules[i].SetStagingState(true);
                     }
 
                 }
@@ -987,8 +990,10 @@ namespace StarshipExpansionProject.Modules
                     {
                         EngineModules[i].minFuelFlow = (float)((MiddleRCCount + CenterRCCount) * SingleMinEngineThrust / EngineModules[i].atmosphereCurve.Curve.keys[0].value / 9.80665);
                     }
-                    //EngineModules[i].maxFuelFlow = 2;
-                     Debug.Log($"[{MODULENAME}] Updating Thrust for engine with ID: {EngineModules[i].engineID}");
+
+                    EngineModules[i].maxThrust = (MiddleRCCount + CenterRCCount) * SingleEngineThrust; //Set maxthrust for mechjeb PVG
+
+                    Debug.Log($"[{MODULENAME}] Updating Thrust for engine with ID: {EngineModules[i].engineID}");
                     if (MiddleRCCount + CenterRCCount == 0)
                     {
                         EngineModules[i].isEnabled = false;
@@ -1007,6 +1012,9 @@ namespace StarshipExpansionProject.Modules
                     {
                         EngineModules[i].minFuelFlow = (float)((CenterRCCount) * SingleMinEngineThrust / EngineModules[i].atmosphereCurve.Curve.keys[0].value / 9.80665);
                     }
+
+                    EngineModules[i].maxThrust = CenterRCCount * SingleEngineThrust; //Set maxthrust for mechjeb PVG
+
                     //EngineModules[i].maxThrust = (CenterRCCount) * SingleEngineThrust;
                     Debug.Log($"[{MODULENAME}] Updating Thrust for engine with ID: {EngineModules[i].engineID}");
                     if (CenterRCCount == 0)
