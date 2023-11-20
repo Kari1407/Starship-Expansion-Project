@@ -4,6 +4,12 @@ Special gratitude to Damon for mantaining and improving TundraExploration, the m
 LICENSE
 All configs are distributed under CC-NC-SA-4.0 license. Nertea's HabUtils.dll is distributed under MIT license. All assets (all .dds, .png and .mu files) alongside with our StarshipExpansionProject.dll are distributed under an All Rights Reserved license. You may not redistribute or re-use these assets without express permission from the author. Updated on February 25th, 2023
 
+Version 2.0.3
+- Fixed Untextured cluster engines
+- Updated RO patches
+- Increased RCS thrust on ship and booster
+- Updated Plumes (Pre IFT-2)
+
 Version 2.0.2
 - Fixed Cluster staging icon not disappearing when all engines are disabled
 - Fixed incompatibility with MechJeb Primer Vector Guidance
