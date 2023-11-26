@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace TundraExploration.Utils
+namespace StarshipExpansionProject.Utils
 {
     public static class Vector3Utils
     {

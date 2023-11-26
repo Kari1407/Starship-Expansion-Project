@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace TundraExploration.Utils
+namespace StarshipExpansionProject.Utils
 {
     public class Vector3Renderer
     {
