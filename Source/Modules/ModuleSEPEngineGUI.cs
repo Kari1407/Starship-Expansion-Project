@@ -981,7 +981,7 @@ namespace StarshipExpansionProject.Modules
 				float MiddleEngineMinThrust = (float)(MiddleRCCount * (MiddleSingleMinEngineThrust > 0 ? MiddleSingleMinEngineThrust : SingleMinEngineThrust));
 				float RBEngineMinThrust = (float)(RBCount * SingleEngineThrust);
 
-                //Debug.Log($"[{MODULENAME}] {RBCount} {MiddleRCCount} {CenterRCCount} {SingleEngineThrust} {MiddleSingleEngineThrust} {CenterSingleEngineThrust} {RBEngineThrust} {MiddleEngineThrust} {CenterEngineThrust}");
+                //Debug.Log($"[{MODULENAME}] {RBCount} {MiddleRCCount} {CenterRCCount} {SingleEngineThrust} {MiddleSingleEngineThrust} {CenterSingleEngineThrust} {RBEngineThrust} {MiddleEngineThrust} {CenterEngineThrust} AND {i} {SwitchActiveID}");
 
 				if (EngineModules[i].engineID == CenterEngineID || EngineModules[i].engineID == MiddleEngineID) { RBEngineThrust = 0; RBEngineMinThrust = 0; }
                 if (EngineModules[i].engineID == CenterEngineID) { MiddleEngineThrust = 0; MiddleEngineMinThrust = 0; }
@@ -1001,7 +1001,7 @@ namespace StarshipExpansionProject.Modules
 					EngineModules[i].isEnabled = false;
 					EngineModules[i].SetStagingState(false);
 				}
-				else if (!EngineModules[i].isEnabled && SwitchActive && SwitchActiveID == 0)
+				else if (!EngineModules[i].isEnabled && SwitchActive && SwitchActiveID == i)
 				{
 					EngineModules[i].isEnabled = true;
 					EngineModules[i].SetStagingState(true);
