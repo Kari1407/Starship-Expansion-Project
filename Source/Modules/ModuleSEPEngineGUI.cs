@@ -994,7 +994,7 @@ namespace StarshipExpansionProject.Modules
                 EngineModules[i].maxFuelFlow = (float) (TotalThrust / EngineModules[i].atmosphereCurve.Curve.keys[0].value / 9.80665);
 
                 if (SingleMinEngineThrust > 0 || MiddleSingleMinEngineThrust > 0 || CenterSingleMinEngineThrust > 0)
-					EngineModules[i].maxFuelFlow = (float)(TotalMinThrust / EngineModules[i].atmosphereCurve.Curve.keys[0].value / 9.80665);
+					EngineModules[i].minFuelFlow = (float)(TotalMinThrust / EngineModules[i].atmosphereCurve.Curve.keys[0].value / 9.80665);
 
 				if (RBCount + MiddleRCCount + CenterRCCount == 0)
 				{
