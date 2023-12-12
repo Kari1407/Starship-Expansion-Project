@@ -1299,5 +1299,17 @@ namespace StarshipExpansionProject.Modules
             CheckTransformStates();
             GUIenabled = false;
         }
+        
+        // StackSymmetry changes have to run not when the engine gui is changed but regularly, so I must use Update unfortunately.
+        public void Update()
+        {
+            // Making sure the player is within the editor scene to reduce unnecessary calls to this function
+            if (HighLogic.LoadedScene == GameScenes.EDITOR)
+            {
+                // Only run if necessary, don't go changing the part symmetry to what it already is each frame!
+                if (part.stackSymmetry == EditorLogic.fetch.symmetryMode) return;
+                part.stackSymmetry = EditorLogic.fetch.symmetryMode;
+            }
+        }
     }
 }
