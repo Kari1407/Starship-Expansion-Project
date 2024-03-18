@@ -5,7 +5,7 @@ namespace ModuleVaporCone
 {
     public class ModuleVaporCone : PartModule
     {
-        public const string MODULENAME = "ModuleVaporConeTest";
+        public const string MODULENAME = "ModuleVaporCone";
 
         [KSPField] public string transform;
 
