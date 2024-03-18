@@ -9,7 +9,7 @@ namespace ModuleVaporCone
 
         [KSPField] public string transform;
 
-        [KSPField] public int chance = 1; // Made nullable for those who don't fill it out! Setting it equal to 1 KSP didn't like
+        [KSPField] public int chance = 1; 
 
         private ModuleEnginesFX engineModule;
 
