@@ -5,7 +5,7 @@ namespace ModuleVaporCone
 {
     public class ModuleVaporCone : PartModule
     {
-        public const string MODULENAME = "ModuleVaporCone";
+        public const string MODULENAME = "ModuleVaporConeTest";
 
         [KSPField] public string transform;
 
@@ -13,37 +13,46 @@ namespace ModuleVaporCone
 
         private ModuleEnginesFX engineModule;
 
-        private bool isShutdown = false;
+        private Random random = new Random();
+
+        private bool isShutdown = false; // Used only for override purposes
         private bool hasRolledChance = false;
 
-        public override void OnLoad(ConfigNode node)
+
+        public void OnStart()
         {
-            if (HighLogic.LoadedScene != GameScenes.FLIGHT) return;
-            foreach (ModuleEnginesFX moduleEngine in part.FindModulesImplementing<ModuleEnginesFX>())
+            // Find engine module and set variable
+            foreach (ModuleEnginesFX moduleEnginesFx in part.FindModulesImplementing<ModuleEnginesFX>())
             {
-                if (moduleEngine.thrustVectorTransformName.Equals(transform))
+                if (moduleEnginesFx.thrustVectorTransformName.Equals(transform))
                 {
                     Debug.Log($"[{MODULENAME}] Found Vapor Cone EngineFX");
 
-                    moduleEngine.Events["Shutdown"].guiActive = false;
-                    moduleEngine.Events["Activate"].guiActive = false;
-                    moduleEngine.Actions["OnAction"].guiName = "Toggle Vapor (Manual Override)";
-                    moduleEngine.Actions["ShutdownAction"].guiName = "Shutdown Vapor (Manual Override)";
-                    moduleEngine.Actions["ActivateAction"].guiName = "Activate Vapor (Manual Override)";
-                    engineModule = moduleEngine;
+                    moduleEnginesFx.Events["Shutdown"].guiActive = false;
+                    moduleEnginesFx.Events["Activate"].guiActive = false;
+                    moduleEnginesFx.Actions["OnAction"].guiName = "Toggle Vapor (Manual Override)";
+                    moduleEnginesFx.Actions["ShutdownAction"].guiName = "Shutdown Vapor (Manual Override)";
+                    moduleEnginesFx.Actions["ActivateAction"].guiName = "Activate Vapor (Manual Override)";
+                    engineModule = moduleEnginesFx;
+                }
+            }
+        }
 
-                    if (new Random().Next(1, chance) == 1)
-                    {
-                        Debug.Log($"[{MODULENAME}] Activating Vapor Cone Engine [Chance]");
-                        isShutdown = false; // Ensure reload is able to shutdown if falling and isShutdown above was set to true
-                        moduleEngine.Activate();
-                    }
-                    else
-                    {
-                        moduleEngine.Shutdown(); // If you revert and come back and roll an L you take the L
-                    }
+        public override void OnLoad(ConfigNode node)
+        {
+            // Find engine module and set variable OnLoad to ensure they are stored
+            foreach (ModuleEnginesFX moduleEnginesFx in part.FindModulesImplementing<ModuleEnginesFX>())
+            {
+                if (moduleEnginesFx.thrustVectorTransformName.Equals(transform))
+                {
+                    Debug.Log($"[{MODULENAME}] Found Vapor Cone EngineFX");
 
-                    hasRolledChance = true; // Has already rolled this go around! Without this else if bellow will spam until it rolls a winner
+                    moduleEnginesFx.Events["Shutdown"].guiActive = false;
+                    moduleEnginesFx.Events["Activate"].guiActive = false;
+                    moduleEnginesFx.Actions["OnAction"].guiName = "Toggle Vapor (Manual Override)";
+                    moduleEnginesFx.Actions["ShutdownAction"].guiName = "Shutdown Vapor (Manual Override)";
+                    moduleEnginesFx.Actions["ActivateAction"].guiName = "Activate Vapor (Manual Override)";
+                    engineModule = moduleEnginesFx;
                 }
             }
         }
@@ -51,27 +60,22 @@ namespace ModuleVaporCone
         public void Update()
         {
             if (HighLogic.LoadedScene != GameScenes.FLIGHT) return;
-            if (vessel.verticalSpeed < -1 && !isShutdown && engineModule) // E.g. Re-entry
+            if (vessel.verticalSpeed > 1 && !hasRolledChance && engineModule)
             {
-                Debug.Log($"[{MODULENAME}] Shutting Down Vapor Cone Engine | Vertical Speed < -1");
-                engineModule.Shutdown();
-                isShutdown = true;
-                hasRolledChance = false; // Get a chance to try again next go around bellow
-            }
-            else if (vessel.verticalSpeed > 1 && isShutdown && engineModule && !hasRolledChance) // E.g. Refly or recover from fall
-            {
-                if (new Random().Next(1, chance) == 1)
+                if (random.Next(1, chance) == 1)
                 {
                     Debug.Log($"[{MODULENAME}] Activating Vapor Cone Engine | Vertical Speed > 1 [Chance]");
                     engineModule.Activate();
-                    isShutdown = false;
                 }
-                hasRolledChance = true;
+                isShutdown = false; // Allows for future rolls, seems redundant but we have manual overrides
+                hasRolledChance = true; // 1 or not, they already rolled
             }
-            else if (vessel.verticalSpeed < -1 && isShutdown && engineModule)
+            else if (vessel.verticalSpeed < -1 && engineModule && !isShutdown)
             {
-                // Fires implicitly separate from the other < -1 only to allow another roll chance from > 1
-                hasRolledChance = false;
+                Debug.Log($"[{MODULENAME}] Shutting Down Vapor Cone Engine | Vertical Speed < -1");
+                engineModule.Shutdown(); // Shuts down no matter what if you are falling
+                isShutdown = true; // Allows for future rolls, seems redundant but we have manual overrides
+                hasRolledChance = false; // Another chance to roll when they go up again
             }
         }
     }
