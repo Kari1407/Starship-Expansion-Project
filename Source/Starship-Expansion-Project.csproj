@@ -67,6 +67,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Modules\ModuleVaporCone.cs" />
     <Compile Include="Modules\ModuleSEPPartSwitchAction.cs" />
     <Compile Include="Modules\ModuleSEPEngineGUI.cs" />
     <Compile Include="Modules\ModuleSEPControlSurface.cs" />
