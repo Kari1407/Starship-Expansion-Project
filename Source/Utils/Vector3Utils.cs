@@ -1,6 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using UnityEngine;
 
-namespace StarshipExpansionProject.Utils
+namespace TundraExploration.Utils
 {
     public static class Vector3Utils
     {

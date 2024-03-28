@@ -62,19 +62,7 @@ namespace StarshipExpansionProject.Modules
         [KSPField]
         public float SingleMinEngineThrust = 0;
 
-		[KSPField]
-		public float CenterSingleEngineThrust = -1;
-
-		[KSPField]
-		public float CenterSingleMinEngineThrust = -1;
-
-		[KSPField]
-		public float MiddleSingleEngineThrust = -1;
-
-		[KSPField]
-		public float MiddleSingleMinEngineThrust = -1;
-
-		[KSPField]
+        [KSPField]
         public float SingleEngineMass = 0;
 
         [KSPField]
@@ -971,41 +959,75 @@ namespace StarshipExpansionProject.Modules
             List<ModuleEnginesFX> EngineModules = part.Modules.GetModules<ModuleEnginesFX>();
             for (int i = 0; i < EngineModules.Count; i++)
             {
-				Debug.Log($"[{MODULENAME}] Updating Thrust for engine with ID: {EngineModules[i].engineID}");
+                if (EngineModules[i].engineID == AllEngineID)
+                {
+                    EngineModules[i].maxThrust = (RBCount + MiddleRCCount + CenterRCCount) * SingleEngineThrust; //Set maxthrust for mechjeb PVG
 
-				float CenterEngineThrust = (float) (CenterRCCount * (CenterSingleEngineThrust > 0 ? CenterSingleEngineThrust : SingleEngineThrust));
-                float MiddleEngineThrust = (float) (MiddleRCCount * (MiddleSingleEngineThrust > 0 ? MiddleSingleEngineThrust : SingleEngineThrust));
-                float RBEngineThrust = (float) (RBCount * SingleEngineThrust);
+                    Debug.Log($"[{MODULENAME}] Updating Thrust for engine with ID: {EngineModules[i].engineID}");
+                    EngineModules[i].maxFuelFlow = (float)((RBCount + MiddleRCCount + CenterRCCount) * SingleEngineThrust / EngineModules[i].atmosphereCurve.Curve.keys[0].value / 9.80665);
+                    if (SingleMinEngineThrust > 0)
+                    {
+                        EngineModules[i].minFuelFlow = (float)((RBCount + MiddleRCCount + CenterRCCount) * SingleMinEngineThrust / EngineModules[i].atmosphereCurve.Curve.keys[0].value / 9.80665);
+                    }
+                    //max flow rate in tonnes per second
+                    //flowrate = wantedthrust/isp/9.80665
+                    if (RBCount + MiddleRCCount + CenterRCCount == 0)
+                    {
+                        EngineModules[i].isEnabled = false;
+                        EngineModules[i].SetStagingState(false);
+                    }
+                    else if (!EngineModules[i].isEnabled && SwitchActive && SwitchActiveID == 0)
+                    {
+                        EngineModules[i].isEnabled = true;
+                        EngineModules[i].SetStagingState(true);
+                    }
 
-				float CenterEngineMinThrust = (float)(CenterRCCount * (CenterSingleMinEngineThrust > 0 ? CenterSingleMinEngineThrust : SingleMinEngineThrust));
-				float MiddleEngineMinThrust = (float)(MiddleRCCount * (MiddleSingleMinEngineThrust > 0 ? MiddleSingleMinEngineThrust : SingleMinEngineThrust));
-				float RBEngineMinThrust = (float)(RBCount * SingleEngineThrust);
+                }
+                else if (EngineModules[i].engineID == MiddleEngineID)
+                {
+                    EngineModules[i].maxFuelFlow = (float)((MiddleRCCount + CenterRCCount) * SingleEngineThrust / EngineModules[i].atmosphereCurve.Curve.keys[0].value / 9.80665);
+                    if (SingleMinEngineThrust > 0)
+                    {
+                        EngineModules[i].minFuelFlow = (float)((MiddleRCCount + CenterRCCount) * SingleMinEngineThrust / EngineModules[i].atmosphereCurve.Curve.keys[0].value / 9.80665);
+                    }
 
-                //Debug.Log($"[{MODULENAME}] {RBCount} {MiddleRCCount} {CenterRCCount} {SingleEngineThrust} {MiddleSingleEngineThrust} {CenterSingleEngineThrust} {RBEngineThrust} {MiddleEngineThrust} {CenterEngineThrust} AND {i} {SwitchActiveID}");
+                    EngineModules[i].maxThrust = (MiddleRCCount + CenterRCCount) * SingleEngineThrust; //Set maxthrust for mechjeb PVG
 
-				if (EngineModules[i].engineID == CenterEngineID || EngineModules[i].engineID == MiddleEngineID) { RBEngineThrust = 0; RBEngineMinThrust = 0; }
-                if (EngineModules[i].engineID == CenterEngineID) { MiddleEngineThrust = 0; MiddleEngineMinThrust = 0; }
+                    Debug.Log($"[{MODULENAME}] Updating Thrust for engine with ID: {EngineModules[i].engineID}");
+                    if (MiddleRCCount + CenterRCCount == 0)
+                    {
+                        EngineModules[i].isEnabled = false;
+                        EngineModules[i].SetStagingState(false);
+                    }
+                    else if (!EngineModules[i].isEnabled && SwitchActive && SwitchActiveID == 1)
+                    {
+                        EngineModules[i].isEnabled = true;
+                        EngineModules[i].SetStagingState(true);
+                    }
+                }
+                else if (EngineModules[i].engineID == CenterEngineID)
+                {
+                    EngineModules[i].maxFuelFlow = (float)((CenterRCCount) * SingleEngineThrust / EngineModules[i].atmosphereCurve.Curve.keys[0].value / 9.80665);
+                    if (SingleMinEngineThrust > 0)
+                    {
+                        EngineModules[i].minFuelFlow = (float)((CenterRCCount) * SingleMinEngineThrust / EngineModules[i].atmosphereCurve.Curve.keys[0].value / 9.80665);
+                    }
 
-				float TotalThrust = CenterEngineThrust + MiddleEngineThrust + RBEngineThrust;
-                float TotalMinThrust = CenterEngineMinThrust + MiddleEngineMinThrust + RBEngineMinThrust;
+                    EngineModules[i].maxThrust = CenterRCCount * SingleEngineThrust; //Set maxthrust for mechjeb PVG
 
-				EngineModules[i].maxThrust = TotalThrust; //Set maxthrust for mechjeb PVG
-
-                EngineModules[i].maxFuelFlow = (float) (TotalThrust / EngineModules[i].atmosphereCurve.Curve.keys[0].value / 9.80665);
-
-                if (SingleMinEngineThrust > 0 || MiddleSingleMinEngineThrust > 0 || CenterSingleMinEngineThrust > 0)
-					EngineModules[i].minFuelFlow = (float)(TotalMinThrust / EngineModules[i].atmosphereCurve.Curve.keys[0].value / 9.80665);
-
-				if (RBCount + MiddleRCCount + CenterRCCount == 0)
-				{
-					EngineModules[i].isEnabled = false;
-					EngineModules[i].SetStagingState(false);
-				}
-				else if (!EngineModules[i].isEnabled && SwitchActive && SwitchActiveID == i)
-				{
-					EngineModules[i].isEnabled = true;
-					EngineModules[i].SetStagingState(true);
-				}
+                    //EngineModules[i].maxThrust = (CenterRCCount) * SingleEngineThrust;
+                    Debug.Log($"[{MODULENAME}] Updating Thrust for engine with ID: {EngineModules[i].engineID}");
+                    if (CenterRCCount == 0)
+                    {
+                        EngineModules[i].isEnabled = false;
+                        EngineModules[i].SetStagingState(false);
+                    }
+                    else if (!EngineModules[i].isEnabled && SwitchActive && SwitchActiveID == 2)
+                    {
+                        EngineModules[i].isEnabled = true;
+                        EngineModules[i].SetStagingState(true);
+                    }
+                }
             }
         }
 
@@ -1298,18 +1320,6 @@ namespace StarshipExpansionProject.Modules
             CreateNodes(2);
             CheckTransformStates();
             GUIenabled = false;
-        }
-        
-        // StackSymmetry changes have to run not when the engine gui is changed but regularly, so I must use Update unfortunately.
-        public void Update()
-        {
-            // Making sure the player is within the editor scene to reduce unnecessary calls to this function
-            if (HighLogic.LoadedScene == GameScenes.EDITOR)
-            {
-                // Only run if necessary, don't go changing the part symmetry to what it already is each frame!
-                if (part.stackSymmetry == EditorLogic.fetch.symmetryMode) return;
-                part.stackSymmetry = EditorLogic.fetch.symmetryMode;
-            }
         }
     }
 }
