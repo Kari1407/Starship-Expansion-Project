@@ -1,3 +1,5 @@
+## WARNING, This is a development branch and it may not be stable. Use at your own risk
+
 # Starship Expansion Project
 Starship Expansion Project (SEP) is a mod being developed by me, Kari, and our amazing team. Our project aims to bring our intepretation of the Starship vehicle by SpaceX into Kerbal Space Program. While a lot of the design choices are based on the actual vehicle sitting on Boca Chica, creative freedom is used to expand our mod even further.
 
