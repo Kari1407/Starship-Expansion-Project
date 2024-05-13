@@ -218,7 +218,7 @@ namespace StarshipExpansionProject.Modules
                     gimbalModule.gimbalRangeXN = 0;
                     gimbalModule.gimbalRangeXP = 0;
                     gimbalModule.gimbalRangeYN = 0;
-                    gimbalModule.gimbalRangeXP = 0;
+                    gimbalModule.gimbalRangeYP = 0;
                     instantLerp = false; // Next time this won't be needed as the GimbalModule should now be active
                 }
                 else
@@ -227,7 +227,7 @@ namespace StarshipExpansionProject.Modules
                     gimbalModule.gimbalRangeXN = Mathf.Lerp(gimbalModule.gimbalRangeXN, 0, gimbalOutSpeed * TimeWarp.deltaTime);
                     gimbalModule.gimbalRangeXP = Mathf.Lerp(gimbalModule.gimbalRangeXP, 0, gimbalOutSpeed * TimeWarp.deltaTime);
                     gimbalModule.gimbalRangeYN = Mathf.Lerp(gimbalModule.gimbalRangeYN, 0, gimbalOutSpeed * TimeWarp.deltaTime);
-                    gimbalModule.gimbalRangeXP = Mathf.Lerp(gimbalModule.gimbalRangeXP, 0, gimbalOutSpeed * TimeWarp.deltaTime);
+                    gimbalModule.gimbalRangeYP = Mathf.Lerp(gimbalModule.gimbalRangeYP, 0, gimbalOutSpeed * TimeWarp.deltaTime);
                 }
             }
             else
