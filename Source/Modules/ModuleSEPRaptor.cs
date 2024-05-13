@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace StarshipExpansionProject.Modules
 {
+
     public class ModuleSEPRaptor : PartModule
     {
         public const string MODULENAME = "ModuleSEPRaptor";
@@ -11,7 +12,7 @@ namespace StarshipExpansionProject.Modules
         public bool enableActuateOut = true;
 
         [KSPField(guiActive = false, isPersistant = true)]
-        private bool IsActuated = false;
+        private bool IsActuated;
 
         [KSPField]
         public float gimbalOutRange = 10f;
@@ -23,62 +24,69 @@ namespace StarshipExpansionProject.Modules
         [UI_Toggle(affectSymCounterparts = UI_Scene.All, disabledText = "On", enabledText = "Off", scene = UI_Scene.All)]
         public bool actuateOut;
 
+        [KSPField(guiActive = true, guiActiveUnfocused = true, guiName = "Actuate Limit", isPersistant = false, unfocusedRange = 25f)]
+        [UI_FloatRange(minValue = 0f, stepIncrement = 1f, maxValue = 100f, affectSymCounterparts = UI_Scene.All, scene = UI_Scene.All)]
+        public float actuateLimiter = 100f;
+
         [KSPAction(guiName = "Toggle Actuate Out")]
         public void ToggleActuateOutAction(KSPActionParam param)
         {
             actuateOut = !actuateOut;
-            CheckGimbal();
+            ActuateOut();
         }
 
         [KSPAction(guiName = "Enable Actuate Out")]
         public void EnableActuateOutAction(KSPActionParam param)
         {
             actuateOut = true;
-            CheckGimbal();
+            ActuateOut();
         }
 
         [KSPAction(guiName = "Disable Actuate Out")]
         public void DisableActuateOutAction(KSPActionParam param)
         {
             actuateOut = false;
-            CheckGimbal();
+            ActuateOut();
         }
 
         private bool initialized;
-        private bool gimbalLock;
         private ModuleGimbal gimbalModule;
-
-        private List<Transform> transforms;
-        private List<Quaternion> origGimbalRots;
+        private List<Quaternion> origGimbalsRots;
+        private float gimbalXN, gimbalXP, gimbalYN, gimbalYP;
         private float[] oldActuation;
+        private bool instantLerp = false;
+
+        /*//Debug:
+        Vector3Renderer gimbalOutLine;
+        Vector3Renderer axisLine;*/
+
 
         public void Start()
         {
             if (HighLogic.LoadedSceneIsFlight)
             {
                 gimbalModule = part.Modules.GetModule<ModuleGimbal>();
-                List<ModuleGimbal> modules = vessel.FindPartModulesImplementing<ModuleGimbal>().ToList();
-                List<ModuleGimbal> sortedmodules = new List<ModuleGimbal>();
-                for (int i = 0; i < modules.Count; i++)
-                {
-                    if (modules[i].part.Modules.Contains(MODULENAME))
-                    {
-                        sortedmodules.Add(modules[i]);
-                    }
+                gimbalXN = gimbalModule.gimbalRangeXN;
+                gimbalXP = gimbalModule.gimbalRangeXP;
+                gimbalYN = gimbalModule.gimbalRangeYN;
+                gimbalYP = gimbalModule.gimbalRangeYP;
 
-                }
-                transforms = sortedmodules.Select(m => m.part.transform).ToList();
+                if (gimbalModule == null) { enableActuateOut = false; }
 
-                if (gimbalModule == null || sortedmodules.Count <= 1)
-                    enableActuateOut = false;
+                /*// Debug
+                gimbalOutLine = new Vector3Renderer(part, "Gimbal Out", "Gimbal Out Direction", Color.red);
+                axisLine = new Vector3Renderer(part, "Axis Line", "Cross Axis", Color.blue);*/
+
             }
-            else
+            else // If in editor disable
             {
                 Fields["actuateOut"].guiActive = false;
                 Fields["actuateOut"].guiActiveEditor = false;
             }
 
-            if (!enableActuateOut)
+
+
+            if (!enableActuateOut) // Module is disabled via config
             {
                 Fields["actuateOut"].guiActive = false;
                 Fields["actuateOut"].guiActiveEditor = false;
@@ -96,22 +104,8 @@ namespace StarshipExpansionProject.Modules
             }
             else
             {
-                origGimbalRots = new List<Quaternion>();
-                for (int i = 0; i < gimbalModule.initRots.Count; i++)
-                {
-                    origGimbalRots.Add(gimbalModule.initRots[i]);
-                }
-
-                oldActuation = new float[gimbalModule.initRots.Count];
-                for (int i = 0; i < oldActuation.Length; i++)
-                {
-                    oldActuation[i] = 0f;
-                }
-
-                if (gimbalModule.Fields.TryGetFieldUIControl("gimbalLock", out UI_Toggle gimbalLockField))
-                {
-                    gimbalLockField.onFieldChanged += OnGimbalLockField;
-                }
+                origGimbalsRots = gimbalModule.initRots.Select(o => o).ToList();
+                oldActuation = gimbalModule.initRots.Select(t => 0f).ToArray();
             }
 
             if (Fields.TryGetFieldUIControl("actuateOut", out UI_Toggle actuateOutField))
@@ -122,42 +116,37 @@ namespace StarshipExpansionProject.Modules
             initialized = true;
         }
 
-        private void OnGimbalLockField(BaseField arg1, object arg2)
+        public override void OnLoad(ConfigNode node)
         {
-            if (!gimbalLock && actuateOut)
-            {
-                actuateOut = false;
-            }
+            actuateOut = IsActuated;
         }
 
         private void OnActuateOutField(BaseField field, object sender)
         {
-            CheckGimbal();
+            ActuateOut();
         }
 
-        public void CheckGimbal()
+
+        public void ActuateOut()
         {
-            if (!enableActuateOut)
+            if (!enableActuateOut) // Plugin is disabled
                 return;
 
             if (actuateOut)
             {
-                gimbalLock = gimbalModule.gimbalLock;
-                gimbalModule.Fields["gimbalLock"].guiInteractable = false;
-                gimbalModule.gimbalLock = true;
                 IsActuated = true;
+                if (!gimbalModule.gimbalActive)
+                {
+                    // Auto Lerp to 0 ranges as it is already at 0 movement, and we don't want someone holding WASD to jump randomly when the gimbal becomes active
+                    // Go ahead and turn that bad boy on
+                    gimbalModule.gimbalActive = true;
+                    instantLerp = true;
+                }
             }
             else
             {
-                gimbalModule.Fields["gimbalLock"].guiInteractable = true;
-                gimbalModule.gimbalLock = gimbalLock;
                 IsActuated = false;
             }
-        }
-
-        public override void OnLoad(ConfigNode node)
-        {
-            actuateOut = IsActuated;
         }
 
         public void FixedUpdate()
@@ -165,68 +154,92 @@ namespace StarshipExpansionProject.Modules
             if (!enableActuateOut || !initialized)
                 return;
 
-            Vector3 centroidPosition = GetCentroidPoint(transforms);
-            Vector3 gimbalOut = part.transform.position - centroidPosition;
-            Vector3 engineUp = part.transform.up;
-            Vector3 axis = Vector3.Cross(gimbalOut, engineUp);
+            // Determine the direction to gimbal the engine outwards
+            Vector3 gimbalOutDir = part.transform.position - part.parent.transform.position;
+
+            // Cross product of the upwards axis and the gimbalOutDir axis
+            Vector3 axis = Vector3.Cross(gimbalOutDir, part.transform.up);
+
+            /*// Debug:
+            gimbalOutLine.DrawLine(part.transform, gimbalOutDir, 2f, true);
+            axisLine.DrawLine(part.transform, axis, 2f, true);*/
 
             if (actuateOut)
             {
+                // Lerp the gimbal ranges forwards
+                LerpRanges(true);
+
                 for (int i = 0; i < gimbalModule.initRots.Count; i++)
                 {
+                    // Get the local cross axis direction
                     Vector3 localAxis = gimbalModule.gimbalTransforms[i].InverseTransformDirection(axis);
-                    float lerped = Mathf.Lerp(oldActuation[i], gimbalOutRange, gimbalOutSpeed * TimeWarp.fixedDeltaTime);
+
+                    // Lerp a value based on the previous value to the final value by the amount determined by gOS * TW.dT
+                    float lerped = Mathf.Lerp(oldActuation[i], gimbalOutRange * (actuateLimiter * 0.01f), gimbalOutSpeed * TimeWarp.deltaTime);
+
+                    // Set the previous value to the new value so next lerped value is this + gOS * TW.dT
                     oldActuation[i] = lerped;
 
-                    gimbalModule.initRots[i] = origGimbalRots[i] * Quaternion.AngleAxis(lerped, localAxis);
+                    // Rotate the initPos about the local axis
+                    gimbalModule.initRots[i] = origGimbalsRots[i] * Quaternion.AngleAxis(lerped, localAxis);
                 }
 
             }
             else
             {
+                LerpRanges(false);
+
                 for (int i = 0; i < gimbalModule.initRots.Count; i++)
                 {
+                    // This is the same thing as above, but in reverse order back to default
                     Vector3 localAxis = gimbalModule.gimbalTransforms[i].InverseTransformDirection(axis);
-                    float lerped = Mathf.Lerp(oldActuation[i], 0f, gimbalModule.gimbalResponseSpeed * TimeWarp.fixedDeltaTime);
+                    float lerped = Mathf.Lerp(oldActuation[i], 0f, gimbalOutSpeed * TimeWarp.deltaTime);
                     oldActuation[i] = lerped;
 
-                    gimbalModule.initRots[i] = origGimbalRots[i] * Quaternion.AngleAxis(lerped, localAxis);
+                    gimbalModule.initRots[i] = origGimbalsRots[i] * Quaternion.AngleAxis(lerped, localAxis);
+
                 }
+
             }
-            //AffectSymmetricalParts();
+
             if (actuateOut != IsActuated)
             {
-                CheckGimbal();
+                ActuateOut();
             }
+
         }
 
-        // https://answers.unity.com/questions/511841
-        private Vector3 GetCentroidPoint(List<Transform> points)
+        public void LerpRanges(bool forward)
         {
-            Vector3 centroid;
-            Vector3 minPoint = points[0].position;
-            Vector3 maxPoint = points[0].position;
-
-            for (int i = 0; i < points.Count; i++)
+            if (forward)
             {
-                Vector3 pos = points[i].position;
-                if (pos.x < minPoint.x)
-                    minPoint.x = pos.x;
-                if (pos.x > maxPoint.x)
-                    maxPoint.x = pos.x;
-                if (pos.y < minPoint.y)
-                    minPoint.y = pos.y;
-                if (pos.y > maxPoint.y)
-                    maxPoint.y = pos.y;
-                if (pos.z < minPoint.z)
-                    minPoint.z = pos.z;
-                if (pos.z > maxPoint.z)
-                    maxPoint.z = pos.z;
+                if (instantLerp) // Used if the gimbalModule wasn't already active (such as engine is off). Upon activating it via this plugin the engine might be seen jumping to a random spot based on player control
+                {
+                    gimbalModule.gimbalRangeXN = 0;
+                    gimbalModule.gimbalRangeXP = 0;
+                    gimbalModule.gimbalRangeYN = 0;
+                    gimbalModule.gimbalRangeXP = 0;
+                    instantLerp = false; // Next time this won't be needed as the GimbalModule should now be active
+                }
+                else
+                {
+                    // Ramp down
+                    gimbalModule.gimbalRangeXN = Mathf.Lerp(gimbalModule.gimbalRangeXN, 0, gimbalOutSpeed * TimeWarp.deltaTime);
+                    gimbalModule.gimbalRangeXP = Mathf.Lerp(gimbalModule.gimbalRangeXP, 0, gimbalOutSpeed * TimeWarp.deltaTime);
+                    gimbalModule.gimbalRangeYN = Mathf.Lerp(gimbalModule.gimbalRangeYN, 0, gimbalOutSpeed * TimeWarp.deltaTime);
+                    gimbalModule.gimbalRangeXP = Mathf.Lerp(gimbalModule.gimbalRangeXP, 0, gimbalOutSpeed * TimeWarp.deltaTime);
+                }
             }
+            else
+            {
+                // Ramp up
+                gimbalModule.gimbalRangeXN = Mathf.Lerp(gimbalModule.gimbalRangeXN, gimbalXN, gimbalOutSpeed * TimeWarp.deltaTime);
+                gimbalModule.gimbalRangeXP = Mathf.Lerp(gimbalModule.gimbalRangeXP, gimbalXP, gimbalOutSpeed * TimeWarp.deltaTime);
+                gimbalModule.gimbalRangeYN = Mathf.Lerp(gimbalModule.gimbalRangeYN, gimbalYN, gimbalOutSpeed * TimeWarp.deltaTime);
+                gimbalModule.gimbalRangeYP = Mathf.Lerp(gimbalModule.gimbalRangeYP, gimbalYP, gimbalOutSpeed * TimeWarp.deltaTime);
 
-            centroid = minPoint + 0.5f * (maxPoint - minPoint);
-
-            return centroid;
+            }
         }
+
     }
 }
