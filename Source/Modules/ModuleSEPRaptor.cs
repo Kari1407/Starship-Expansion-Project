@@ -21,7 +21,7 @@ namespace StarshipExpansionProject.Modules
         public float gimbalOutSpeed = 5f;
 
         [KSPField(guiActive = true, guiActiveUnfocused = true, guiName = "Actuate Out", isPersistant = false, unfocusedRange = 25f)]
-        [UI_Toggle(affectSymCounterparts = UI_Scene.All, disabledText = "On", enabledText = "Off", scene = UI_Scene.All)]
+        [UI_Toggle(affectSymCounterparts = UI_Scene.All, disabledText = "Off", enabledText = "On", scene = UI_Scene.All)]
         public bool actuateOut;
 
         [KSPField(guiActive = true, guiActiveUnfocused = true, guiName = "Actuate Limit", isPersistant = false, unfocusedRange = 25f)]
