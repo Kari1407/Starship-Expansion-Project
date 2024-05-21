@@ -29,10 +29,6 @@ Starship Expansion Project (SEP) is a mod being developed by me, Kari, and our a
 - Raster Prop Monitor
 - ASET Props
 
-### IVA Recommended Mods
-
-- JSI Advanced Transparent Pods
-
 ## Roadmap
 You can check my roadmap on https://trello.com/b/UPblvcar/karis-roadmap
 
