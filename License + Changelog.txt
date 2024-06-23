@@ -4,6 +4,25 @@ Special gratitude to Damon for mantaining and improving TundraExploration, the m
 LICENSE
 All configs are distributed under CC-NC-SA-4.0 license. Nertea's HabUtils.dll is distributed under MIT license. All assets (all .dds, .png and .mu files) alongside with our StarshipExpansionProject.dll are distributed under an All Rights Reserved license. You may not redistribute or re-use these assets without express permission from the author. Updated on February 25th, 2023
 
+
+Version 2.2.0
+- Added SN5 Variant to MK-2
+- Added Starhopper
+- Added Structural Part
+- Added MK-1 Ring section by Isaquest
+- Added MK-1 Expendable Crew Nosecone
+- Added Vents to MK-2 Parts (SN15/SN5)
+- Unstacked HSR (Separate Part)
+- Updated IVA by Janus92
+- Updated Vapor Cone by Fossil
+- Updated HSR FX by Fossil
+- Updated stock material for all parts
+- Updated Real Names patch
+- Adjusted CoP and CoL of all flaps
+- Fixed CoM offset no applying to the Shielded Skirt variants on Ship
+- Fixed (hopefully) QD docking
+- Updated RCS FX by Fossil
+
 Version 2.1.0
 - Updated MK-1 Parts (old crafts do not work anymore)
 - Joined interstage and booster core parts into 1
@@ -15,6 +34,7 @@ Version 2.1.0
 - Added Depot (Streched expendable ship)
 - Updated IVA
 - Added Donnager MK-2 (SN Ship)
+- Added non-essential parts by janus
 
 Version 2.0.3
 - Fixed Untextured cluster engines

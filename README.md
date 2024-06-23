@@ -27,10 +27,6 @@ Starship Expansion Project (SEP) is a mod being developed by me, Kari, and our a
 - Raster Prop Monitor
 - ASET Props
 
-### IVA Recommended Mods
-
-- JSI Advanced Transparent Pods
-
 ## Roadmap
 You can check my roadmap on https://trello.com/b/UPblvcar/karis-roadmap
 
@@ -39,7 +35,11 @@ I also have a discord server, enter for updates, dev talk or to have fun
 https://discord.gg/CQzk9H84pr
 
 ## Know Issues
-
+- When you spawn a part in the VAB it may have invisible meshes, just click it again and will fix itself
+- If SEP parts are black, you need to bump up KSP graphical settings, specifically render quality and reflection related settings
+- Ship's aerodynamics is very sensitive, small changes to the weight distribution can cause instability, we are looking at potential *permanent* fixes
+- Stock SAS tends to overcorrect a lot and can create even more instability on ship EDL (Entry, descent and landing). We recommend using MechJeb to avoid this.
+- Full Stack is not very stable on ascent, that's a design issue, fly with flaps perpendicular to the ground and don't be too agressive on the gravity turn and you should be fine.
 
 ## LICENSE
 All configs are distributed under CC-NC-SA-4.0 license. 
