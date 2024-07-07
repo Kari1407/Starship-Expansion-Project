@@ -14,13 +14,14 @@ Starship Expansion Project (SEP) is a mod being developed by me, Kari, and our a
 - Tundra Exploration
 - Kerbal Joint Reinforcement (Next or Continued)
 - Starship Launch Expansion
+- Community Resource Pack 
 
 ### Suggested Mods:
-- Community Resource Pack 
-- Modular Launch Pads
 - Flight Manager for Reusable Stages (FMRS)
 - Trajectories
 - HullCameraVDS & NeptuneCamera
+- Hangar Extender
+- MechJeb 2
 
 ### IVA Dependencies
 - Near Future Props
