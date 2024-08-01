@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -26,36 +27,71 @@ namespace StarshipExpansionProject.Modules
 		[KSPField]
 		public string tertiaryEngineID;
 
-		[KSPEvent(guiActive = true, guiName = "Next Engine Mode")]
+		// UI Elements
+		[KSPField(guiFormat = "F5", guiActive = true, guiName = "#autoLOC_6001375", guiUnits = "#autoLOC_7001409")]
+		public float fuelFlowGui;
+
+		[KSPField(guiFormat = "F2", guiActive = false, guiName = "#autoLOC_6001376", guiUnits = "%")]
+		public float propellantReqMet = 0;
+
+		[KSPField(guiFormat = "F1", guiActive = true, guiName = "#autoLOC_6001377", guiUnits = "#autoLOC_7001408")]
+		public float finalThrust;
+
+		[KSPField(guiFormat = "F1", guiActive = true, guiName = "#autoLOC_6001378", guiUnits = "#autoLOC_7001400")]
+		public float realIsp;
+
+		[KSPField(guiActive = true, guiName = "#autoLOC_6001352")]
+		public string status = "Nominal";
+
+		[KSPField(guiActive = false, guiName = "#autoLOC_6001379")]
+		public string statusL2 = " ";
+
+		[UI_Toggle(disabledText = "#autoLOC_6013010", scene = UI_Scene.All, enabledText = "#autoLOC_6005051", affectSymCounterparts = UI_Scene.All)]
+		[KSPField(advancedTweakable = true, isPersistant = true, guiActive = true, guiActiveEditor = true, guiName = "#autoLOC_900770")]
+		public bool independentThrottle;
+
+		[UI_FloatRange(stepIncrement = 1f, maxValue = 100f, minValue = 0f, affectSymCounterparts = UI_Scene.All)]
+		[KSPAxisField(incrementalSpeed = 20f, isPersistant = true, maxValue = 100f, minValue = 0f, guiFormat = "F1", axisMode = KSPAxisMode.Incremental, guiActiveEditor = true, guiActive = true, guiName = "#autoLOC_900770")]
+		public float independentThrottlePercentage;
+
+		[UI_FloatRange(requireFullControl = true, stepIncrement = 0.5f, maxValue = 100f, minValue = 0f)]
+		[KSPAxisField(minValue = 0f, incrementalSpeed = 20f, isPersistant = true, axisMode = KSPAxisMode.Incremental, maxValue = 100f, guiActive = true, guiActiveEditor = true, guiName = "#autoLOC_6001363")]
+		public float thrustPercentage = 100f;
+
+		[KSPEvent(guiActive = true, guiName = "#SEP_NextEngineMode")]
 		public void NextEngineModeEvent() => SetNextEngine();
 
-		[KSPEvent(guiActive = true, guiName = "Previous Engine Mode")]
+		[KSPEvent(guiActive = true, guiName = "#SEP_PreviousEngineMode")]
 		public void PreviousEngineModeEvent() => SetPreviousEngine();
 
-		[KSPAction(guiName = "Activate Engine")]
+		[KSPAction(guiName = "#autoLOC_6001382")]
 		public void ActivateEngineAction(KSPActionParam param) => ActivateActiveEngine();
 
-		[KSPAction(guiName = "Shutdown Engine")]
+		[KSPEvent(guiName = "#autoLOC_6001382", guiActive = false, guiActiveEditor = false)]
+		public void ActivateEngineEvent() => ActivateActiveEngine();
+
+		[KSPAction(guiName = "#autoLOC_6001381")]
 		public void ShutdownEngineAction(KSPActionParam param) => ShutdownActiveEngine();
 
-		[KSPAction(guiName = "Toggle Engine")]
+		[KSPEvent(guiName = "#autoLOC_6001381", guiActive = false, guiActiveEditor = false)]
+		public void ShutdownEngineEvent() => ShutdownActiveEngine();
+
+		[KSPAction(guiName = "#autoLOC_6001380")]
 		public void ToggleEngineAction(KSPActionParam param) => ToggleActiveEngine();
 
-		[KSPAction(guiName = "Next Engine Mode")]
+		[KSPAction(guiName = "#SEP_NextEngineMode")]
 		public void NextEngineModeAction(KSPActionParam param) => SetNextEngine();
 
-		[KSPAction(guiName = "Previous Engine Mode")]
+		[KSPAction(guiName = "#SEP_PreviousEngineMode")]
 		public void PreviousEngineModeAction(KSPActionParam param) => SetPreviousEngine();
 
-		[KSPAction(guiName = "Toggle Engine Mode")]
-		public void ToggleEngineModeAction(KSPActionParam param) => SetNextEngine();
-
-		[KSPAction(guiName = "Toggle Independent Throttle")]
+		[KSPAction(guiName = "#autoLOC_6005052")]
 		public void ToggleIndependentThrottleAction(KSPActionParam param) => ToggleIndependentThrottle(param);
 
 		private List<ModuleEnginesFX> activeEngines;
 		private List<ModuleEnginesFX> oldEngines;
 		private List<ModuleEnginesFX> engines = new List<ModuleEnginesFX>();
+		private UI_FloatRange independentThrottlePercentField;
 
 		public override void OnStart(StartState state)
 		{
@@ -84,31 +120,121 @@ namespace StarshipExpansionProject.Modules
 				moduleEnginesFX.isEnabled = false;
 
 				engines.Add(moduleEnginesFX);
+				foreach(var en in engines)
+				{
+					foreach (var item in en.Fields)
+					{
+						if (item.guiActive) item.guiActive = false;
+						if (item.guiActiveEditor) item.guiActiveEditor = false;
+					}
+					foreach (var item in en.Events)
+					{
+						if (item.guiActive) item.guiActive = false;
+						if (item.guiActiveEditor) item.guiActiveEditor = false;
+					}
+					foreach (var item in en.Actions)
+					{
+						if (item.activeEditor) item.activeEditor = false;
+					}
+				}
 			}
 			SetActiveEngine(selectedIndex, true);
+			Events["ActivateEngineEvent"].guiActive = activeEngines.Any(en => !en.EngineIgnited);
+			Events["ShutdownEngineEvent"].guiActive = activeEngines.Any(en => en.EngineIgnited);
+			if (activeEngines.Any(en => en.throttleLocked)) Fields["independentThrottlePercentage"].guiActive = false;
+			Fields.TryGetFieldUIControl("independentThrottlePercentage", out independentThrottlePercentField);
+			if (!independentThrottle && independentThrottlePercentField != null)
+			{
+				independentThrottlePercentField.SetSceneVisibility(UI_Scene.None, false);
+			}
+			Fields["independentThrottle"].OnValueModified += throttleModeChanged;
+			Fields["independentThrottlePercentage"].OnValueModified += throttleValueChanged;
+			Fields["thrustPercentage"].OnValueModified += thrustValueChanged;
+
+
+		}
+
+		public override void OnActive()
+		{
+			StartCoroutine(DisableFields());
+			Events["ActivateEngineEvent"].guiActive = false;
+			Events["ShutdownEngineEvent"].guiActive = true;
+			Fields["propellantReqMet"].guiActive = true;
+		}
+
+		public override void OnFixedUpdate()
+		{
+			base.OnFixedUpdate();
+			fuelFlowGui = activeEngines.Sum(en => en.fuelFlowGui);
+			propellantReqMet = activeEngines.Average(en => en.propellantReqMet);
+			finalThrust = activeEngines.Sum(en => en.finalThrust);
+			realIsp = activeEngines.Average(en => en.realIsp);
+			status = activeEngines[0].status;
+			Fields["statusL2"].guiActive = activeEngines[0].flameout;
+			activeEngines.ForEach(en => en.Fields["statusL2"].guiActive = false);
+			activeEngines.ForEach(en => en.independentThrottlePercentField.SetSceneVisibility(UI_Scene.None, en.independentThrottle));
+		}
+
+		public void OnDestroy()
+		{
+			StopCoroutine(DisableFields());
+			Fields["independentThrottle"].OnValueModified -= throttleModeChanged;
+			Fields["independentThrottlePercentage"].OnValueModified -= throttleValueChanged;
+			Fields["thrustPercentage"].OnValueModified -= thrustValueChanged;
+		}
+
+		public void throttleModeChanged(object obj)
+		{
+			activeEngines.ForEach(en => en.independentThrottle = independentThrottle);
+			if (independentThrottle)
+			{
+				independentThrottlePercentField.SetSceneVisibility(UI_Scene.All, independentThrottle);
+			}
+			else
+			{
+				independentThrottlePercentField.SetSceneVisibility(UI_Scene.None, independentThrottle);
+			}
+		}
+
+		public void throttleValueChanged(object obj)
+		{
+			activeEngines.ForEach(en => en.independentThrottlePercentage = independentThrottlePercentage);
+		}
+
+		public void thrustValueChanged(object obj)
+		{
+			activeEngines.ForEach(en => en.thrustPercentage = thrustPercentage);
 		}
 
 		public void ShutdownActiveEngine()
 		{
 			activeEngines.ForEach(en => en.Shutdown());
+			Events["ActivateEngineEvent"].guiActive = true;
+			Events["ShutdownEngineEvent"].guiActive = false;
+			Fields["propellantReqMet"].guiActive = false;
 		}
 
 		public void ActivateActiveEngine()
 		{
 			activeEngines.ForEach(en => en.Activate());
+			activeEngines.ForEach(en => en.Fields["propellantReqMet"].guiActive = false);
+			Events["ActivateEngineEvent"].guiActive = false;
+			Events["ShutdownEngineEvent"].guiActive = true;
+			Fields["propellantReqMet"].guiActive = true;
 		}
 
 		public void ToggleActiveEngine()
 		{
 			if (activeEngines.Any(en => en.EngineIgnited))
-				activeEngines.ForEach(en => en.Shutdown());
+				ShutdownActiveEngine();
 			else
-				activeEngines.ForEach(en => en.Activate());
+				ActivateActiveEngine();
 		}
 
 		public void ToggleIndependentThrottle(KSPActionParam param)
 		{
-			activeEngines.ForEach(en => en.ToggleThrottle(param));
+			independentThrottle = !independentThrottle;
+			throttleModeChanged(param);
 		}
 
 		public void SetNextEngine()
@@ -140,6 +266,9 @@ namespace StarshipExpansionProject.Modules
 
 			activeEngines.ForEach(en => en.manuallyOverridden = false);
 			activeEngines.ForEach(en => en.isEnabled = true);
+			activeEngines.ForEach(en => en.independentThrottle = independentThrottle);
+			activeEngines.ForEach(en => en.independentThrottlePercentage = independentThrottlePercentage);
+			activeEngines.ForEach(en => en.thrustPercentage = thrustPercentage);
 
 			currentEngineDisplay = Regex.Replace(activeEngines[0].engineName, "([a-z])([A-Z])", "$1 $2");
 			selectedIndex = index;
@@ -149,7 +278,7 @@ namespace StarshipExpansionProject.Modules
 
 			if (activeEngines.Any(en => en.EngineIgnited))
 			{
-				activeEngines.ForEach(en => {if (!en.EngineIgnited) { en.Activate();}});
+				activeEngines.ForEach(en => {if (!en.EngineIgnited) { en.Activate(); en.Fields["propellantReqMet"].guiActive = false; } });
 				activeEngines.ForEach(en => en.currentThrottle = oldEngines[0].currentThrottle);
 				foreach (var engine in oldEngines)
 				{
@@ -162,6 +291,12 @@ namespace StarshipExpansionProject.Modules
 			}
 
 			activeEngines.ForEach(en => en.manuallyOverridden = true);
+		}
+
+		private IEnumerator DisableFields()
+		{
+			yield return new WaitUntil(() =>  activeEngines.Any(en => en.Fields["propellantReqMet"].guiActive));
+			activeEngines.ForEach(en => en.Fields["propellantReqMet"].guiActive = false);
 		}
 
 		public bool isOperational
