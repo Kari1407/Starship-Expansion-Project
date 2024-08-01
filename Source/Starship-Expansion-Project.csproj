@@ -19,7 +19,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -91,10 +91,15 @@
 	  <Publicize Include="Assembly-CSharp:ModuleEngines.independentThrottlePercentField"/>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
+  <!-- <PropertyGroup>
     <PostBuildEvent>xcopy /Y "$(TargetPath)" "$(ReferencePath)GameData\$(TargetName)\Plugin"
 xcopy /Y "$(TargetPath)" "$(SolutionDir)..\GameData\$(TargetName)\Plugin"</PostBuildEvent>
-  </PropertyGroup>
+  </PropertyGroup> -->
+  <Target Name="AfterBuild">
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ReferencePath)GameData\$(TargetName)\Plugin" />
+    <Copy Condition="'$(Configuration)' == 'Debug'" SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(ReferencePath)GameData\$(TargetName)\Plugin" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(SolutionDir)..\GameData\$(TargetName)\Plugin" />
+  </Target>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
