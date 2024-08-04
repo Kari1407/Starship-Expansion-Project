@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using Waterfall;
 
 namespace StarshipExpansionProject.Modules
 {
@@ -26,6 +27,9 @@ namespace StarshipExpansionProject.Modules
 
 		[KSPField]
 		public string tertiaryEngineID;
+
+		[KSPField]
+		public string WaterfallControllerName = "EngineMode";
 
 		// UI Elements
 		[KSPField(guiFormat = "F5", guiActive = true, guiName = "#autoLOC_6001375", guiUnits = "#autoLOC_7001409")]
@@ -93,6 +97,28 @@ namespace StarshipExpansionProject.Modules
 		private List<ModuleEnginesFX> engines = new List<ModuleEnginesFX>();
 		private UI_FloatRange independentThrottlePercentField;
 
+		private WaterfallController waterfallController
+		{
+			get { 
+				if (_waterfallController == null && HighLogic.LoadedSceneIsFlight)
+				{
+					foreach (var controller in waterfallModule?.Controllers)
+					{
+						if (controller.name == WaterfallControllerName)
+						{
+							_waterfallController = controller;
+							break;
+						}
+					}
+					if (_waterfallController == null)
+						Debug.LogError($"[{MODULENAME}] Could not find waterfall controller with name '{WaterfallControllerName}' on part '{part.name}'");
+				}
+				return _waterfallController;
+			}
+		}
+		private WaterfallController _waterfallController;
+		private ModuleWaterfallFX waterfallModule;
+
 		public override void OnStart(StartState state)
 		{
 
@@ -138,6 +164,8 @@ namespace StarshipExpansionProject.Modules
 					}
 				}
 			}
+			waterfallModule = part.Modules.GetModule<ModuleWaterfallFX>();
+
 			SetActiveEngine(selectedIndex, true);
 			Events["ActivateEngineEvent"].guiActive = activeEngines.Any(en => !en.EngineIgnited);
 			Events["ShutdownEngineEvent"].guiActive = activeEngines.Any(en => en.EngineIgnited);
@@ -150,8 +178,6 @@ namespace StarshipExpansionProject.Modules
 			Fields["independentThrottle"].OnValueModified += throttleModeChanged;
 			Fields["independentThrottlePercentage"].OnValueModified += throttleValueChanged;
 			Fields["thrustPercentage"].OnValueModified += thrustValueChanged;
-
-
 		}
 
 		public override void OnActive()
@@ -173,6 +199,8 @@ namespace StarshipExpansionProject.Modules
 			Fields["statusL2"].guiActive = activeEngines[0].flameout;
 			activeEngines.ForEach(en => en.Fields["statusL2"].guiActive = false);
 			activeEngines.ForEach(en => en.independentThrottlePercentField.SetSceneVisibility(UI_Scene.None, en.independentThrottle));
+			if (waterfallController != null && (waterfallController.Get().Length == 0 || waterfallController.Get()[0] != (float)selectedIndex / 2))
+				waterfallController.Set(selectedIndex);
 		}
 
 		public void OnDestroy()
@@ -272,6 +300,7 @@ namespace StarshipExpansionProject.Modules
 
 			currentEngineDisplay = Regex.Replace(activeEngines[0].engineName, "([a-z])([A-Z])", "$1 $2");
 			selectedIndex = index;
+			waterfallController?.Set((float) index / 2);
 
 			if (setup)
 				return;
