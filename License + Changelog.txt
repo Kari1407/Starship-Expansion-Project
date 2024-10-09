@@ -16,6 +16,8 @@ Version 3.0.0
 - Fix missing _AOMap on parts that support it (TU)
 - Fixed Vents having exhaust damage
 - Fixed MK2 flap description
+- Updated MK2 to match MK3
+- Moved to Resurfaced over TU
 
 
 Version 2.2.0

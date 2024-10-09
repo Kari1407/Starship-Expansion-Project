@@ -10,7 +10,8 @@ Starship Expansion Project (SEP) is a mod being developed by me, Kari, and our a
 - ModuleManager
 
 ### Recommended Mods:
-- Textures Unlimited
+- Shabby 0.4.0 or later + Resurfaced (New Standard)
+- Textures Unlimited (For older parts)
 - Tundra Exploration
 - Kerbal Joint Reinforcement (Next or Continued)
 - Starship Launch Expansion
