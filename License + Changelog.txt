@@ -18,6 +18,7 @@ Version 3.0.0
 - Fixed MK2 flap description
 - Updated MK2 to match MK3
 - Moved to Resurfaced over TU
+- Increased Gimbal Range on Raptor to help with heavier Ship
 
 
 Version 2.2.0
