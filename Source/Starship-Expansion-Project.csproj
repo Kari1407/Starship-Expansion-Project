@@ -27,7 +27,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -35,42 +35,19 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="Assembly-CSharp">
-      <HintPath>$(ReferencePath)KSP_x64_Data\Managed\Assembly-CSharp.dll</HintPath>
+    <PackageReference Include="KSPBuildTools" Version="0.0.2-alpha.7" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="HOW_TO_BUILD.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="$(KSPRoot)/GameData/Waterfall/Plugins/Waterfall.dll">
+      <Private>False</Private>
+      <CKANIdentifier>Waterfall</CKANIdentifier>
     </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>$(ReferencePath)KSP_x64_Data\Managed\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>$(ReferencePath)KSP_x64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>$(ReferencePath)KSP_x64_Data\Managed\UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UIModule">
-      <HintPath>$(ReferencePath)KSP_x64_Data\Managed\UnityEngine.UIModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.IMGUIModule">
-      <HintPath>$(ReferencePath)KSP_x64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule">
-      <HintPath>$(ReferencePath)KSP_x64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>$(ReferencePath)KSP_x64_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.InputLegacyModule">
-      <HintPath>$(ReferencePath)KSP_x64_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
-    </Reference>
-    <Reference Include="TundraExploration">
-      <HintPath>$(ReferencePath)GameData\TundraExploration\Plugin\TundraExploration.dll</HintPath>
-    </Reference>
-    <Reference Include="B9PartSwitch">
-      <HintPath>$(ReferencePath)GameData\B9PartSwitch\Plugins\B9PartSwitch.dll</HintPath>
-    </Reference>
-    <Reference Include="Waterfall">
-      <HintPath>$(ReferencePath)GameData\Waterfall\Plugins\Waterfall.dll</HintPath>
+    <Reference Include="$(KSPRoot)/GameData/B9PartSwitch/Plugins/B9PartSwitch.dll">
+      <Private>False</Private>
+      <CKANIdentifier>B9PartSwitch</CKANIdentifier>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -91,15 +68,6 @@
 	  <Publicize Include="Assembly-CSharp:ModuleEngines.independentThrottlePercentField"/>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- <PropertyGroup>
-    <PostBuildEvent>xcopy /Y "$(TargetPath)" "$(ReferencePath)GameData\$(TargetName)\Plugin"
-xcopy /Y "$(TargetPath)" "$(SolutionDir)..\GameData\$(TargetName)\Plugin"</PostBuildEvent>
-  </PropertyGroup> -->
-  <Target Name="AfterBuild">
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ReferencePath)GameData\$(TargetName)\Plugin" />
-    <Copy Condition="'$(Configuration)' == 'Debug'" SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(ReferencePath)GameData\$(TargetName)\Plugin" />
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(SolutionDir)..\GameData\$(TargetName)\Plugin" />
-  </Target>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>

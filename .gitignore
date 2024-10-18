@@ -2,4 +2,5 @@ Source/.vs/
 Source/bin/
 Source/obj/
 Source/packages/
-Source/Starship-Expansion-Project.csproj.user
+Source/*.user
+GameData/StarshipExpansionProject/Plugin/
