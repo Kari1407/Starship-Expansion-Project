@@ -1,0 +1,20 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - '**/*.cs'
+  pull_request:
+    paths:
+      - '**/*.cs'
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  build:
+    uses: ./.github/workflows/internal-build.yml
+    with:
+      solution-file-path: 'Source/Starship-Expansion-Project.sln'
+      use-ckan: true
+      artifacts: LICENSE* README* CHANGELOG* Extras

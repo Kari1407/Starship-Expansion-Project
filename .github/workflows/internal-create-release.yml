@@ -1,0 +1,113 @@
+name: internal-create-release
+
+on:
+  workflow_call:
+    inputs:
+      version-string:
+        type: string
+        required: true
+        # TODO: pull this from a tag?  Or should this workflow create a new tag?
+      version-template-extension:
+        type: string
+        default: .versiontemplate
+      version-template-files:
+        type: string
+      build-configuration:
+        type: string
+        default: Release
+      artifacts:
+        type: string
+        default: GameData LICENSE* README* CHANGELOG*
+      ksp-zip-url:
+        type: string
+        default: https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip
+      dependency-identifiers:
+        type: string
+      solution-file-path:
+        type: string
+      use-msbuild:
+        type: boolean
+        default: true
+        description: >
+          If MSBuild should be used. If your mod has no msbuild project (e.g. a pure part mod) 
+          you should set this to false
+      use-ckan:
+        type: boolean
+        default: false
+        description: >
+          If CKAN should be installed to install dependencies in the msbuild project.
+      changelog-input-file:
+        type: string
+        default: CHANGELOG.md
+      changelog-output-file:
+        type: string
+    secrets:
+      ksp-zip-password:
+        required: false
+
+env:
+  KSP_ROOT: /tmp/ksp
+  RELEASE_STAGING: /tmp/release
+  VERSION_STRING: ${{ inputs.version-string }} #note this may be modified by update-version if it is one of the special tokens
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout Mod Repo
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: update-version
+        uses: KSPModdingLibs/KSPBuildTools/.github/actions/update-version@main
+        with:
+          version-string: ${{ inputs.version-string }}
+          template-extension: ${{ inputs.version-template-extension }}
+          files: ${{ inputs.version-template-files }}
+          changelog-input-file: ${{ inputs.changelog-input-file }}
+          changelog-output-file: ${{ inputs.changelog-output-file }}
+
+      - name: commit-version-and-tag
+        working-directory: ${{ github.workspace }}
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git commit -m "bump version to $VERSION_STRING"
+          git tag -f -a "$VERSION_STRING" -m "$VERSION_STRING"
+
+      # Install CKAN and set up an instance
+      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/setup-ckan@main
+        if: ${{ (inputs.use-ckan && inputs.use-msbuild) || inputs.dependency-identifiers }}
+
+      # Install any listed CKAN dependencies
+      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/install-dependencies@main
+        if: ${{ inputs.dependency-identifiers }}
+        with:
+          dependency-identifiers: ${{ inputs.dependency-identifiers }}
+
+      - name: compile
+        uses: KSPModdingLibs/KSPBuildTools/.github/actions/compile@main
+        with:
+          build-configuration: ${{ inputs.build-configuration }}
+          ksp-zip-url: ${{ inputs.ksp-zip-url }}
+          ksp-zip-password: ${{ secrets.ksp-zip-password }}
+          solution-file-path: ${{ inputs.solution-file-path }}
+
+      - name: assemble-release
+        id: assemble-release
+        uses: ./.github/actions/assemble-release
+        with:
+          artifacts: ${{ inputs.artifacts }}
+          output-file-name: ${{ github.event.repository.name }}-${{ env.VERSION_STRING }}
+
+      - name: create-release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git push
+          gh release create "$VERSION_STRING" --draft --target ${{ github.ref_name }} --title "$VERSION_STRING" "$ARTIFACT_FILENAME.zip" --notes-file "$RELEASE_NOTES_FILE"
