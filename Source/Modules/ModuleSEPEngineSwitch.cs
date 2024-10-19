@@ -100,7 +100,7 @@ namespace StarshipExpansionProject.Modules
 		private WaterfallController waterfallController
 		{
 			get { 
-				if (_waterfallController == null && HighLogic.LoadedSceneIsFlight)
+				if (_waterfallController == null && HighLogic.LoadedSceneIsFlight && !(waterfallModule?.Controllers.Count == 0))
 				{
 					foreach (var controller in waterfallModule?.Controllers)
 					{
@@ -200,7 +200,7 @@ namespace StarshipExpansionProject.Modules
 			activeEngines.ForEach(en => en.Fields["statusL2"].guiActive = false);
 			activeEngines.ForEach(en => en.independentThrottlePercentField.SetSceneVisibility(UI_Scene.None, en.independentThrottle));
 			if (waterfallController != null && (waterfallController.Get().Length == 0 || waterfallController.Get()[0] != (float)selectedIndex / 2))
-				waterfallController.Set(selectedIndex);
+				waterfallController.Set((float) selectedIndex / 2);
 		}
 
 		public void OnDestroy()
