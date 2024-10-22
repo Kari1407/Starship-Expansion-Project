@@ -1,0 +1,18 @@
+This project makes use of KSPBuildTools.
+KSPBT is meant to make building KSP Plugins simpler.
+To do so KSPBT needs a reference to your KSP install, KSPBT will look in default locations for steam installations on all operating systems.
+But if your copy of KSP is not in any of these locations you will need to tell KSPBT where it is.
+You can do this either by setting an enviroment variable named KSP_ROOT in your operating system that points to the ksp folder.
+Or more likely by creating a (insert SolutionName here).props.user file in the same directory as the solution. that contains the following:
+
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <KSPRoot>(PATH TO YOUR KSP FOLDER)</KSPRoot>
+  </PropertyGroup>
+</Project>
+
+
+This file is not git tracked meaning any contributor will need to create this file manually if their install is not in a default location.
+For more information, look at the readme of KSPBT here:
+https://github.com/KSPModdingLibs/KSPBuildTools

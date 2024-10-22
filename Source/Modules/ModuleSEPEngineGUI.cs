@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using TundraExploration.Modules;
+//using TundraExploration.Modules;
 
 namespace StarshipExpansionProject.Modules
 {
@@ -905,12 +905,12 @@ namespace StarshipExpansionProject.Modules
         }
         private void TundraPresent(int RBCount, int MiddleRCCount, int CenterRCCount)
         {
-            List<ModuleTundraEngineSwitch> EngineSwitchModules = part.Modules.GetModules<ModuleTundraEngineSwitch>();
+            List<ModuleSEPEngineSwitch> EngineSwitchModules = part.Modules.GetModules<ModuleSEPEngineSwitch>();
             if (EngineSwitchModules.Count != 0)
             {
                 for (int i = 0; i < EngineSwitchModules.Count; i++)
                 {
-                    Debug.Log($"[{MODULENAME}] Tundra State: {EngineSwitchModules[i].selectedIndex}");
+                    Debug.Log($"[{MODULENAME}] SEP State: {EngineSwitchModules[i].selectedIndex}");
                     if (RBCount + MiddleRCCount + CenterRCCount  == 0 && EngineSwitchModules[i].isEnabled)
                     {
                         EngineSwitchModules[i].isEnabled = false;
@@ -969,32 +969,47 @@ namespace StarshipExpansionProject.Modules
                 TundraNotPresent(RBCount, MiddleRCCount, CenterRCCount);
             }
             List<ModuleEnginesFX> EngineModules = part.Modules.GetModules<ModuleEnginesFX>();
+			float CenterEngineThrust = (float)(CenterRCCount * (CenterSingleEngineThrust > 0 ? CenterSingleEngineThrust : SingleEngineThrust));
+			float MiddleEngineThrust = (float)(MiddleRCCount * (MiddleSingleEngineThrust > 0 ? MiddleSingleEngineThrust : SingleEngineThrust));
+			float RBEngineThrust = (float)(RBCount * SingleEngineThrust);
+
+			float CenterEngineMinThrust = (float)(CenterRCCount * (CenterSingleMinEngineThrust > 0 ? CenterSingleMinEngineThrust : SingleMinEngineThrust));
+			float MiddleEngineMinThrust = (float)(MiddleRCCount * (MiddleSingleMinEngineThrust > 0 ? MiddleSingleMinEngineThrust : SingleMinEngineThrust));
+			float RBEngineMinThrust = (float)(RBCount * SingleEngineThrust);
             for (int i = 0; i < EngineModules.Count; i++)
             {
-				Debug.Log($"[{MODULENAME}] Updating Thrust for engine with ID: {EngineModules[i].engineID}");
+                Debug.Log($"[{MODULENAME}] Updating Thrust for engine with ID: {EngineModules[i].engineID}");
+                if (EngineModules[i].engineID == CenterEngineID)
+                {
+                    EngineModules[i].maxThrust = CenterEngineThrust; //Set maxthrust for mechjeb PVG
+                    EngineModules[i].maxFuelFlow = (float)(CenterEngineThrust / EngineModules[i].atmosphereCurve.Curve.keys[0].value / 9.80665);
+                    if (CenterSingleMinEngineThrust > 0) EngineModules[i].minFuelFlow = (float)(CenterEngineMinThrust / EngineModules[i].atmosphereCurve.Curve.keys[0].value / 9.80665);
+				}
+                else if (EngineModules[i].engineID == MiddleEngineID)
+                {
+					EngineModules[i].maxThrust = MiddleEngineThrust; //Set maxthrust for mechjeb PVG
+					EngineModules[i].maxFuelFlow = (float)(MiddleEngineThrust / EngineModules[i].atmosphereCurve.Curve.keys[0].value / 9.80665);
+                    if (MiddleSingleMinEngineThrust > 0) EngineModules[i].minFuelFlow = (float)(MiddleEngineMinThrust / EngineModules[i].atmosphereCurve.Curve.keys[0].value / 9.80665);
+				}
+				else if (EngineModules[i].engineID == AllEngineID)
+				{
+					EngineModules[i].maxThrust = RBEngineThrust; //Set maxthrust for mechjeb PVG
+					EngineModules[i].maxFuelFlow = (float)(RBEngineThrust / EngineModules[i].atmosphereCurve.Curve.keys[0].value / 9.80665);
+                    if (SingleMinEngineThrust > 0) EngineModules[i].minFuelFlow = (float)(RBEngineMinThrust / EngineModules[i].atmosphereCurve.Curve.keys[0].value / 9.80665);
+				}
 
-				float CenterEngineThrust = (float) (CenterRCCount * (CenterSingleEngineThrust > 0 ? CenterSingleEngineThrust : SingleEngineThrust));
-                float MiddleEngineThrust = (float) (MiddleRCCount * (MiddleSingleEngineThrust > 0 ? MiddleSingleEngineThrust : SingleEngineThrust));
-                float RBEngineThrust = (float) (RBCount * SingleEngineThrust);
+				//if (EngineModules[i].engineID == CenterEngineID || EngineModules[i].engineID == MiddleEngineID) { RBEngineThrust = 0; RBEngineMinThrust = 0; }
+    //            if (EngineModules[i].engineID == CenterEngineID) { MiddleEngineThrust = 0; MiddleEngineMinThrust = 0; }
 
-				float CenterEngineMinThrust = (float)(CenterRCCount * (CenterSingleMinEngineThrust > 0 ? CenterSingleMinEngineThrust : SingleMinEngineThrust));
-				float MiddleEngineMinThrust = (float)(MiddleRCCount * (MiddleSingleMinEngineThrust > 0 ? MiddleSingleMinEngineThrust : SingleMinEngineThrust));
-				float RBEngineMinThrust = (float)(RBCount * SingleEngineThrust);
+				//float TotalThrust = CenterEngineThrust + MiddleEngineThrust + RBEngineThrust;
+    //            float TotalMinThrust = CenterEngineMinThrust + MiddleEngineMinThrust + RBEngineMinThrust;
 
-                //Debug.Log($"[{MODULENAME}] {RBCount} {MiddleRCCount} {CenterRCCount} {SingleEngineThrust} {MiddleSingleEngineThrust} {CenterSingleEngineThrust} {RBEngineThrust} {MiddleEngineThrust} {CenterEngineThrust} AND {i} {SwitchActiveID}");
+				//EngineModules[i].maxThrust = TotalThrust; //Set maxthrust for mechjeb PVG
 
-				if (EngineModules[i].engineID == CenterEngineID || EngineModules[i].engineID == MiddleEngineID) { RBEngineThrust = 0; RBEngineMinThrust = 0; }
-                if (EngineModules[i].engineID == CenterEngineID) { MiddleEngineThrust = 0; MiddleEngineMinThrust = 0; }
+    //            EngineModules[i].maxFuelFlow = (float) (TotalThrust / EngineModules[i].atmosphereCurve.Curve.keys[0].value / 9.80665);
 
-				float TotalThrust = CenterEngineThrust + MiddleEngineThrust + RBEngineThrust;
-                float TotalMinThrust = CenterEngineMinThrust + MiddleEngineMinThrust + RBEngineMinThrust;
-
-				EngineModules[i].maxThrust = TotalThrust; //Set maxthrust for mechjeb PVG
-
-                EngineModules[i].maxFuelFlow = (float) (TotalThrust / EngineModules[i].atmosphereCurve.Curve.keys[0].value / 9.80665);
-
-                if (SingleMinEngineThrust > 0 || MiddleSingleMinEngineThrust > 0 || CenterSingleMinEngineThrust > 0)
-					EngineModules[i].minFuelFlow = (float)(TotalMinThrust / EngineModules[i].atmosphereCurve.Curve.keys[0].value / 9.80665);
+    //            if (SingleMinEngineThrust > 0 || MiddleSingleMinEngineThrust > 0 || CenterSingleMinEngineThrust > 0)
+				//	EngineModules[i].minFuelFlow = (float)(TotalMinThrust / EngineModules[i].atmosphereCurve.Curve.keys[0].value / 9.80665);
 
 				if (RBCount + MiddleRCCount + CenterRCCount == 0)
 				{
