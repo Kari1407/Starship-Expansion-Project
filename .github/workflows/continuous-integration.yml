@@ -13,8 +13,8 @@ on:
 
 jobs:
   build:
-    uses: ./.github/workflows/internal-build.yml
+    uses: KSPModdingLibs/KSPBuildTools/.github/workflows/build.yml@main
     with:
       solution-file-path: 'Source/Starship-Expansion-Project.sln'
       use-ckan: true
-      artifacts: LICENSE* README* CHANGELOG* Extras
+      artifacts: GameData LICENSE* README* CHANGELOG* Extras

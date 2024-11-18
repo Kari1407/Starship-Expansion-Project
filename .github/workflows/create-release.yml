@@ -9,9 +9,9 @@ on:
 
 jobs:
   internal-create-release:
-    uses: ./.github/workflows/internal-create-release.yml
+    uses: KSPModdingLibs/KSPBuildTools/.github/workflows/create-release.yml@main
     with:
       solution-file-path: 'Source/Starship-Expansion-Project.sln'
       use-ckan: true
       version-string: ${{ inputs.version-string }}
-      artifacts: LICENSE* README* CHANGELOG* Extras
+      artifacts: GameData LICENSE* README* CHANGELOG* Extras
