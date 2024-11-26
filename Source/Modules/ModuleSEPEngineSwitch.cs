@@ -314,7 +314,7 @@ namespace StarshipExpansionProject.Modules
 					if (!activeEngines.Contains(engine) && engine.EngineIgnited)
 					{
 						engine.Shutdown();
-						engine.isEnabled = false;
+						//engine.isEnabled = false;
 					}
 				}
 			}
