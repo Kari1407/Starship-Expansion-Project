@@ -13,12 +13,11 @@ Starship Expansion Project (SEP) is a mod being developed by me, Kari, and our a
 - Community Resource Pack
 - Shabby 0.4.0 or later + Resurfaced (Shiny)
 - Textures Unlimited (Shiny but for Older parts)
-- Tundra Exploration
 - Kerbal Joint Reinforcement
-- Starship Launch Expansion
-
 
 ### Suggested Mods:
+- Starship Launch Expansion
+- Editor Extensions Redux
 - Flight Manager for Reusable Stages (FMRS)
 - Trajectories
 - HullCameraVDS & NeptuneCamera
@@ -52,4 +51,4 @@ All configs are distributed under CC-NC-SA-4.0 license.
 Nertea's HabUtils.dll is distributed under MIT license. 
 All assets (all .dds, .png and .mu files) alongside with our StarshipExpansionProject.dll are distributed under an All Rights Reserved license. 
 
-You may not redistribute or re-use these assets without express permission from the author. Updated on February 25th, 2023
+You may not redistribute or re-use these assets without express permission from the author. Updated on November 30th, 2024

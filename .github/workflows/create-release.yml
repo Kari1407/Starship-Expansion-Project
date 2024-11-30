@@ -1,0 +1,17 @@
+name: create-release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version-string:
+        type: string
+        required: true
+
+jobs:
+  internal-create-release:
+    uses: KSPModdingLibs/KSPBuildTools/.github/workflows/create-release.yml@main
+    with:
+      solution-file-path: 'Source/Starship-Expansion-Project.sln'
+      use-ckan: true
+      version-string: ${{ inputs.version-string }}
+      artifacts: GameData LICENSE* README* CHANGELOG* Extras
