@@ -293,7 +293,7 @@ namespace StarshipExpansionProject.Modules
 			for (int i = index; i < 3; i++) activeEngines.Add(engines[i]);
 
 			activeEngines.ForEach(en => en.manuallyOverridden = false);
-			activeEngines.ForEach(en => en.isEnabled = true);
+			//activeEngines.ForEach(en => en.isEnabled = true);
 			activeEngines.ForEach(en => en.independentThrottle = independentThrottle);
 			activeEngines.ForEach(en => en.independentThrottlePercentage = independentThrottlePercentage);
 			activeEngines.ForEach(en => en.thrustPercentage = thrustPercentage);
@@ -308,7 +308,7 @@ namespace StarshipExpansionProject.Modules
 			if (activeEngines.Any(en => en.EngineIgnited))
 			{
 				activeEngines.ForEach(en => {if (!en.EngineIgnited) { en.Activate(); en.Fields["propellantReqMet"].guiActive = false; } });
-				activeEngines.ForEach(en => en.currentThrottle = oldEngines[0].currentThrottle);
+				//activeEngines.ForEach(en => en.currentThrottle = oldEngines[0].currentThrottle);
 				foreach (var engine in oldEngines)
 				{
 					if (!activeEngines.Contains(engine) && engine.EngineIgnited)
