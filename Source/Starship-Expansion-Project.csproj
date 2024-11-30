@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -13,10 +12,12 @@
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -24,7 +25,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -32,45 +33,28 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="Assembly-CSharp">
-      <HintPath>$(ReferencePath)KSP_x64_Data\Managed\Assembly-CSharp.dll</HintPath>
+    <PackageReference Include="Krafs.Publicizer">
+      <Version>1.0.3</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="KSPBuildTools" Version="0.0.2-alpha.7" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="HOW_TO_BUILD.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="$(KSPRoot)/GameData/Waterfall/Plugins/Waterfall.dll">
+      <Private>False</Private>
+      <CKANIdentifier>Waterfall</CKANIdentifier>
     </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>$(ReferencePath)KSP_x64_Data\Managed\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>$(ReferencePath)KSP_x64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>$(ReferencePath)KSP_x64_Data\Managed\UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UIModule">
-      <HintPath>$(ReferencePath)KSP_x64_Data\Managed\UnityEngine.UIModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.IMGUIModule">
-      <HintPath>$(ReferencePath)KSP_x64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule">
-      <HintPath>$(ReferencePath)KSP_x64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>$(ReferencePath)KSP_x64_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.InputLegacyModule">
-      <HintPath>$(ReferencePath)KSP_x64_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
-    </Reference>
-    <Reference Include="TundraExploration">
-      <HintPath>$(ReferencePath)GameData\TundraExploration\Plugin\TundraExploration.dll</HintPath>
-    </Reference>
-    <Reference Include="B9PartSwitch">
-      <HintPath>$(ReferencePath)GameData\B9PartSwitch\Plugins\B9PartSwitch.dll</HintPath>
-    </Reference>
-    <Reference Include="Waterfall">
-      <HintPath>$(ReferencePath)GameData\Waterfall\Plugins\Waterfall.dll</HintPath>
+    <Reference Include="$(KSPRoot)/GameData/B9PartSwitch/Plugins/B9PartSwitch.dll">
+      <Private>False</Private>
+      <CKANIdentifier>B9PartSwitch</CKANIdentifier>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Modules\ModuleSEPEngineSwitch.cs" />
     <Compile Include="Modules\ModuleSEPVaporCone.cs" />
     <Compile Include="Modules\ModuleSEPPartSwitchAction.cs" />
     <Compile Include="Modules\ModuleSEPEngineGUI.cs" />
@@ -80,10 +64,11 @@
     <Compile Include="Utils\Vector3Renderer.cs" />
     <Compile Include="Utils\Vector3Utils.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+	  <Publicize Include="Assembly-CSharp:ModuleEngines.independentThrottlePercentField"/>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>xcopy /Y "$(TargetPath)" "$(ReferencePath)GameData\$(TargetName)\Plugin"
-xcopy /Y "$(TargetPath)" "$(SolutionDir)..\GameData\$(TargetName)\Plugin"</PostBuildEvent>
-  </PropertyGroup>
 </Project>

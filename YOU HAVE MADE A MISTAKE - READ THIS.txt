@@ -1,0 +1,8 @@
+If youre seeing this file, you cloned the repository from github instead of downloading a release package. 
+
+The repository does not have the compiled dll for StarshipExpansionProject and it will not work. 
+
+Please download StarshipExpansionProject from the releases page: https://github.com/Kari1407/Starship-Expansion-Project/releases
+
+Green tag = Stable version
+Orange tag = Dev Version

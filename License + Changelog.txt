@@ -4,6 +4,22 @@ Special gratitude to Damon for mantaining and improving TundraExploration, the m
 LICENSE
 All configs are distributed under CC-NC-SA-4.0 license. Nertea's HabUtils.dll is distributed under MIT license. All assets (all .dds, .png and .mu files) alongside with our StarshipExpansionProject.dll are distributed under an All Rights Reserved license. You may not redistribute or re-use these assets without express permission from the author. Updated on February 25th, 2023
 
+Version 3.0.0
+- MK-3 Initial Release
+- Updated RO patches by Anomalia
+- Fix skirt not shielding engines from aero
+- Fix booster drag cubes
+- Plume updated by Rhea
+- New raptor sounds
+- Fixed RCS on depot and Expendable
+- Allowed Raptors to be surface attachable
+- Fix missing _AOMap on parts that support it (TU)
+- Fixed Vents having exhaust damage
+- Fixed MK2 flap description
+- Updated MK2 to match MK3
+- Moved to Resurfaced over TU
+- Increased Gimbal Range on Raptor to help with heavier Ship
+
 
 Version 2.2.0
 - Added SN5 Variant to MK-2
