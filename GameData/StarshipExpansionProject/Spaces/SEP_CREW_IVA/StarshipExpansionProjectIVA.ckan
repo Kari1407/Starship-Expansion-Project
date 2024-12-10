@@ -1,0 +1,11 @@
+depends:
+  - name: ModuleManager
+  - name: B9PartSwitch
+  - name: StarshipExpansionProject
+  - name: NearFutureProps
+  - name: Reviva
+  - name: FreeIva
+  - name: RasterPropMonitor-Core
+recommends:
+  - name: ASETProps
+  - name: JSIAdvancedTransparentPods
