@@ -975,7 +975,7 @@ namespace StarshipExpansionProject.Modules
 
 			float CenterEngineMinThrust = (float)(CenterRCCount * (CenterSingleMinEngineThrust > 0 ? CenterSingleMinEngineThrust : SingleMinEngineThrust));
 			float MiddleEngineMinThrust = (float)(MiddleRCCount * (MiddleSingleMinEngineThrust > 0 ? MiddleSingleMinEngineThrust : SingleMinEngineThrust));
-			float RBEngineMinThrust = (float)(RBCount * SingleEngineThrust);
+			float RBEngineMinThrust = (float)(RBCount * SingleMinEngineThrust);
             for (int i = 0; i < EngineModules.Count; i++)
             {
                 Debug.Log($"[{MODULENAME}] Updating Thrust for engine with ID: {EngineModules[i].engineID}");
