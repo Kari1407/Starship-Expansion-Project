@@ -25,11 +25,11 @@ namespace StarshipExpansionProject.Modules
         [KSPField]
         public bool ShowCurrentSubtype = false; // Wether to show the current subtype in the PAW or not
 
-        [KSPField(isPersistant = false, guiActive = true, guiName = "Current Subtype")] // Field that returns the name of the currently selected subtype
+        [KSPField(isPersistant = false, guiActive = true, guiName = "#LOC_SEP_CurrentSubtype")] // Field that returns the name of the currently selected subtype
         public string CurrentSubtype;
 
         // Action to switch to the next subtype in the list, wrapping around to the beginning of the list if necessary
-        [KSPAction(guiName = "Next Subtype")]
+        [KSPAction(guiName = "#LOC_SEP_NextSubtype")]
         public void NextSubtype(KSPActionParam param)
         {
             Debug.Log($"[{MODULENAME}] Cycling to next subtype on {SwitchModule.moduleID}");
@@ -43,7 +43,7 @@ namespace StarshipExpansionProject.Modules
         }
 
         // Action to switch to the previous subtype in the list, wrapping around to the end of the list if necessary
-        [KSPAction(guiName = "Previous Subtype")]
+        [KSPAction(guiName = "#LOC_SEP_PreviousSubtype")]
         public void PreviousSubtype(KSPActionParam param)
         {
             Debug.Log($"[{MODULENAME}] Cycling to previous subtype on {SwitchModule.moduleID}");

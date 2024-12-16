@@ -22,13 +22,13 @@ namespace StarshipExpansionProject
         [UI_FloatRange(affectSymCounterparts = UI_Scene.All, maxValue = 40, minValue = 0f, scene = UI_Scene.All, stepIncrement = 0.25f)]
         public float controlAuthority = 40f;
 
-        [KSPField(guiActive = false, guiActiveUnfocused = true, guiFormat = "0", guiName = "Pitch Authority", guiUnits = "°", unfocusedRange = 25f)]
+        [KSPField(guiActive = false, guiActiveUnfocused = true, guiFormat = "0", guiName = "#LOC_SEP_pitchAuthority", guiUnits = "°", unfocusedRange = 25f)]
         public float pitchAuthority = 1f;
 
-        [KSPField(guiActive = false, guiActiveUnfocused = true, guiFormat = "0", guiName = "Yaw Authority", guiUnits = "°", unfocusedRange = 25f)]
+        [KSPField(guiActive = false, guiActiveUnfocused = true, guiFormat = "0", guiName = "#LOC_SEP_yawAuthority", guiUnits = "°", unfocusedRange = 25f)]
         public float yawAuthority = 1f;
 
-        [KSPField(guiActive = false, guiActiveUnfocused = true, guiFormat = "0", guiName = "Roll Authority", guiUnits = "°", unfocusedRange = 25f)]
+        [KSPField(guiActive = false, guiActiveUnfocused = true, guiFormat = "0", guiName = "#LOC_SEP_rollAuthority", guiUnits = "°", unfocusedRange = 25f)]
         public float rollAuthority = 1f;
 
         [KSPField(guiActive = true, guiActiveUnfocused = true, guiName = "#autoLOC_6001333", isPersistant = true, unfocusedRange = 25f)]
@@ -54,13 +54,13 @@ namespace StarshipExpansionProject
             deploy = !deploy;
         }
 
-        [KSPAction(guiName = "Extend Fins")]
+        [KSPAction(guiName = "#LOC_SEP_ExtendFinsAction")]
         public void ExtendFinsAction(KSPActionParam param)
         {
             deploy = false;
         }
 
-        [KSPAction(guiName = "Retract Fins")]
+        [KSPAction(guiName = "#LOC_SEP_RetractFinsAction")]
         public void RetractFinsAction(KSPActionParam param)
         {
             deploy = true;
@@ -137,7 +137,7 @@ namespace StarshipExpansionProject
             ignoreRoll = true;
         }
 
-        [KSPAction(guiName = "Toggle Actuation")]
+        [KSPAction(guiName = "#LOC_SEP_ToggleAllAction")]
         public void ToggleAllAction(KSPActionParam param)
         {
             ignorePitch = !ignorePitch;
@@ -145,11 +145,22 @@ namespace StarshipExpansionProject
             ignoreRoll = !ignoreRoll;
         }
 
-        [KSPAction(guiName = "Set to flip angles")]
+        [KSPAction(guiName = "#LOC_SEP_ActivateFlipAngles")]
         public void ActivateFlipAngles(KSPActionParam param)
         {
             deployAngle = ctrlSurfaceFlipDeployAngle;
+            ignorePitch = true;
+            ignoreYaw = true;
+            ignoreRoll = true;
+        }
 
+        [KSPAction(guiName = "#LOC_SEP_ActivateLandingAngles")]
+        public void ActivateLandingAngles(KSPActionParam param)
+        {
+            deployAngle = ctrlSurfaceLandingDeployAngle;
+            ignorePitch = true;
+            ignoreYaw = true;
+            ignoreRoll = true;
         }
 
 
@@ -185,6 +196,12 @@ namespace StarshipExpansionProject
         [KSPField]
         public float ctrlSurfaceFlipDeployAngle = 70f;
 
+        /// <summary>
+        /// The deploy angle the surface will be set to on activation of "Set to Landing Angles"
+        /// </summary>
+        [KSPField]
+        public float ctrlSurfaceLandingDeployAngle = 70f;
+        
         /// <summary>
         /// Controls the range of the authority limiter (in degrees)
         /// </summary>
