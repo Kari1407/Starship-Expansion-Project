@@ -20,29 +20,29 @@ namespace StarshipExpansionProject.Modules
         [KSPField]
         public float gimbalOutSpeed = 5f;
 
-        [KSPField(guiActive = true, guiActiveUnfocused = true, guiName = "Actuate Out", isPersistant = false, unfocusedRange = 25f)]
+        [KSPField(guiActive = true, guiActiveUnfocused = true, guiName = "#LOC_SEP_actuateOut", isPersistant = false, unfocusedRange = 25f)]
         [UI_Toggle(affectSymCounterparts = UI_Scene.All, disabledText = "Off", enabledText = "On", scene = UI_Scene.All)]
         public bool actuateOut;
 
-        [KSPField(guiActive = true, guiActiveUnfocused = true, guiName = "Actuate Limit", isPersistant = false, unfocusedRange = 25f)]
+        [KSPField(guiActive = true, guiActiveUnfocused = true, guiName = "#LOC_SEP_actuateLimiter", isPersistant = false, unfocusedRange = 25f)]
         [UI_FloatRange(minValue = 0f, stepIncrement = 1f, maxValue = 100f, affectSymCounterparts = UI_Scene.All, scene = UI_Scene.All)]
         public float actuateLimiter = 100f;
 
-        [KSPAction(guiName = "Toggle Actuate Out")]
+        [KSPAction(guiName = "#LOC_SEP_ToggleActuateOutAction")]
         public void ToggleActuateOutAction(KSPActionParam param)
         {
             actuateOut = !actuateOut;
             ActuateOut();
         }
 
-        [KSPAction(guiName = "Enable Actuate Out")]
+        [KSPAction(guiName = "#LOC_SEP_EnableActuateOutAction")]
         public void EnableActuateOutAction(KSPActionParam param)
         {
             actuateOut = true;
             ActuateOut();
         }
 
-        [KSPAction(guiName = "Disable Actuate Out")]
+        [KSPAction(guiName = "#LOC_SEP_DisableActuateOutAction")]
         public void DisableActuateOutAction(KSPActionParam param)
         {
             actuateOut = false;

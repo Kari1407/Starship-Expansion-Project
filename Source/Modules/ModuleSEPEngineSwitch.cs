@@ -83,10 +83,10 @@ namespace StarshipExpansionProject.Modules
 		[KSPAction(guiName = "#autoLOC_6001380")]
 		public void ToggleEngineAction(KSPActionParam param) => ToggleActiveEngine();
 
-		[KSPAction(guiName = "#SEP_NextEngineMode")]
+		[KSPAction(guiName = "#LOC_SEP_NextEngineMode")]
 		public void NextEngineModeAction(KSPActionParam param) => SetNextEngine();
 
-		[KSPAction(guiName = "#SEP_PreviousEngineMode")]
+		[KSPAction(guiName = "#LOC_SEP_PreviousEngineMode")]
 		public void PreviousEngineModeAction(KSPActionParam param) => SetPreviousEngine();
 
 		[KSPAction(guiName = "#autoLOC_6005052")]

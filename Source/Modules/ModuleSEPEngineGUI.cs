@@ -92,7 +92,7 @@ namespace StarshipExpansionProject.Modules
         [KSPField]
         public string CenterEngineID = "";
 
-        [KSPEvent(guiActive = false, guiActiveEditor = true, guiActiveUnfocused = false, guiName = "Select Engines")]
+        [KSPEvent(guiActive = false, guiActiveEditor = true, guiActiveUnfocused = false, guiName = "#LOC_SEP_SelectEnginesGUIName")]
         public void Button1()
         {
             GUIenabled = true;
