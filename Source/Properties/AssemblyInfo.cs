@@ -32,13 +32,13 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("3.0.01")]
-[assembly: AssemblyFileVersion("3.0.01")]
+[assembly: AssemblyVersion("3.0.03")]
+[assembly: AssemblyFileVersion("3.0.03")]
 
 [assembly: KSPAssembly(name: "StarshipExpansionProject"
                      , versionMajor: 3
                      , versionMinor: 0
-                     , versionRevision: 01)]
+                     , versionRevision: 03)]
 
 [assembly: KSPAssemblyDependency("Waterfall", 0, 0)]
 [assembly: KSPAssemblyDependency("B9PartSwitch", 0, 0)]

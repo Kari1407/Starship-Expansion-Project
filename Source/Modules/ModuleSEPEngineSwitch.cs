@@ -62,10 +62,10 @@ namespace StarshipExpansionProject.Modules
 		[KSPAxisField(minValue = 0f, incrementalSpeed = 20f, isPersistant = true, axisMode = KSPAxisMode.Incremental, maxValue = 100f, guiActive = true, guiActiveEditor = true, guiName = "#autoLOC_6001363")]
 		public float thrustPercentage = 100f;
 
-		[KSPEvent(guiActive = true, guiName = "#SEP_NextEngineMode")]
+		[KSPEvent(guiActive = true, guiName = "#LOC_SEP_NextEngineMode")]
 		public void NextEngineModeEvent() => SetNextEngine();
 
-		[KSPEvent(guiActive = true, guiName = "#SEP_PreviousEngineMode")]
+		[KSPEvent(guiActive = true, guiName = "#LOC_SEP_PreviousEngineMode")]
 		public void PreviousEngineModeEvent() => SetPreviousEngine();
 
 		[KSPAction(guiName = "#autoLOC_6001382")]
@@ -83,10 +83,10 @@ namespace StarshipExpansionProject.Modules
 		[KSPAction(guiName = "#autoLOC_6001380")]
 		public void ToggleEngineAction(KSPActionParam param) => ToggleActiveEngine();
 
-		[KSPAction(guiName = "#SEP_NextEngineMode")]
+		[KSPAction(guiName = "#LOC_SEP_NextEngineMode")]
 		public void NextEngineModeAction(KSPActionParam param) => SetNextEngine();
 
-		[KSPAction(guiName = "#SEP_PreviousEngineMode")]
+		[KSPAction(guiName = "#LOC_SEP_PreviousEngineMode")]
 		public void PreviousEngineModeAction(KSPActionParam param) => SetPreviousEngine();
 
 		[KSPAction(guiName = "#autoLOC_6005052")]

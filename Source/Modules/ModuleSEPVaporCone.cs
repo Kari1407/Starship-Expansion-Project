@@ -36,9 +36,9 @@ namespace ModuleVaporCone
 
                     moduleEnginesFx.Events["Shutdown"].guiActive = false;
                     moduleEnginesFx.Events["Activate"].guiActive = false;
-                    moduleEnginesFx.Actions["OnAction"].guiName = "Toggle Vapor (Manual Override)";
-                    moduleEnginesFx.Actions["ShutdownAction"].guiName = "Shutdown Vapor (Manual Override)";
-                    moduleEnginesFx.Actions["ActivateAction"].guiName = "Activate Vapor (Manual Override)";
+                    moduleEnginesFx.Actions["OnAction"].guiName = "#LOC_SEP_ToggleVapor";
+                    moduleEnginesFx.Actions["ShutdownAction"].guiName = "#LOC_SEP_ShutdownVapor";
+                    moduleEnginesFx.Actions["ActivateAction"].guiName = "#LOC_SEP_Activate";
                     engineModule = moduleEnginesFx;
                 }
             }
@@ -55,9 +55,9 @@ namespace ModuleVaporCone
 
                     moduleEnginesFx.Events["Shutdown"].guiActive = false;
                     moduleEnginesFx.Events["Activate"].guiActive = false;
-                    moduleEnginesFx.Actions["OnAction"].guiName = "Toggle Vapor (Manual Override)";
-                    moduleEnginesFx.Actions["ShutdownAction"].guiName = "Shutdown Vapor (Manual Override)";
-                    moduleEnginesFx.Actions["ActivateAction"].guiName = "Activate Vapor (Manual Override)";
+                    moduleEnginesFx.Actions["OnAction"].guiName = "#LOC_SEP_ToggleVapor";
+                    moduleEnginesFx.Actions["ShutdownAction"].guiName = "#LOC_SEP_ShutdownVapor";
+                    moduleEnginesFx.Actions["ActivateAction"].guiName = "#LOC_SEP_Activate";
                     engineModule = moduleEnginesFx;
                 }
             }

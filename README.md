@@ -8,15 +8,16 @@ Starship Expansion Project (SEP) is a mod being developed by me, Kari, and our a
 - B9 Part Switch
 - Waterfall
 - ModuleManager
+- KSPCommunityPartModules
 
-### "Must Have" Mods:
+### Soft Dependencies:
 - Community Resource Pack
 - Shabby 0.4.0 or later + Resurfaced (Shiny)
 - Textures Unlimited (Shiny but for Older parts)
 - Kerbal Joint Reinforcement
-
-### Suggested Mods:
 - Starship Launch Expansion
+
+### Recommended Mods:
 - Editor Extensions Redux
 - Flight Manager for Reusable Stages (FMRS)
 - Trajectories
