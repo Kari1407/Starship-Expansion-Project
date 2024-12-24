@@ -62,7 +62,7 @@ namespace StarshipExpansionProject.Modules
 
         #region Private UI Fields
         // Private UI Fields
-        private Rect windowRect = new Rect(250, 200, 250, 376);
+        private Rect windowRect = new Rect(250, 200, 250, 374);
         private bool isDragging = false;
         private bool isVisible = false;
         private Vector2 customSelectablesScrollPosition = Vector2.zero;
@@ -566,6 +566,8 @@ namespace StarshipExpansionProject.Modules
             GUIStyle toggleStyle = new GUIStyle(GUI.skin.toggle);
             toggleStyle.wordWrap = true;
             GUIStyle engineStyle = new GUIStyle(GUI.skin.toggle);
+            engineStyle.padding = new RectOffset(5, 5, 5, 5);
+            engineStyle.margin = new RectOffset(0, 0, 0, 0);
 
             GUI.skin.window.padding = new RectOffset(0, 0, 20, 0);
 
@@ -619,7 +621,7 @@ namespace StarshipExpansionProject.Modules
                         tooltips.Add(relationship.guiContext);
                     }
                 }
-                GUIContent content = new GUIContent(selectable.name);
+                GUIContent content = new GUIContent(selectable.guiName);
                 if (tooltips.Count != 0) content.tooltip = string.Join("\n", tooltips);
                 if (GUILayout.Toggle(true, content, toggleStyle) != true)
                 {
@@ -649,9 +651,9 @@ namespace StarshipExpansionProject.Modules
                     float tmpX = canvasRect.x + canvasRect.width / 2 + EnginePositionsDict[set.name][i].x * uiScale - engineSize / 2;
                     float tmpY = canvasRect.y + canvasRect.height / 2 + EnginePositionsDict[set.name][i].y * uiScale - engineSize / 2;
                     var tmpPosition = new Rect(tmpX, tmpY, engineSize, engineSize);
-                    GUIContent content = GUIContent.none;
+                    GUIContent content = new GUIContent();
                     content.tooltip = string.Format("Hold shift to {0} all {1}", arg0: true ? "remove" : "install", set.guiName);
-                    if(GUI.Toggle(tmpPosition, true, content, engineStyle) != true)
+                    if (GUI.Toggle(tmpPosition, true, content, engineStyle) != true)
                     {
                         Debug.Log($"Mock Toggle {set.name} : {set.selectableItems[i].name}");
                     }
