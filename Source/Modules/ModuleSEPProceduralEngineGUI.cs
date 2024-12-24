@@ -13,7 +13,6 @@ using KSP.Localization;
 //       Update Mass
 //       Update Thrust
 //       investigate if the processing of relationships could be made better by only processing selectables which have a relationship to the changed group then adding any selectables that change.
-//       Localisation
 
 namespace StarshipExpansionProject.Modules
 {
@@ -85,6 +84,9 @@ namespace StarshipExpansionProject.Modules
         private bool isVisible = false;
         private Vector2 customSelectablesScrollPosition = Vector2.zero;
         private string uiName = Localizer.GetStringByTag("#LOC_SEP_GUILabelName");
+        private string uiEngineRingTooltip = Localizer.GetStringByTag("#LOC_SEP_EngineRingTooltip");
+        private string uiRemove = Localizer.GetStringByTag("#LOC_SEP_remove");
+        private string uiInstall = Localizer.GetStringByTag("#LOC_SEP_install");
         private float uiWidth = 236;
         private static int highestuiIndex = -1;
         private int? _uiIndex;
@@ -686,7 +688,10 @@ namespace StarshipExpansionProject.Modules
                     }
                     bool currentState = State[set.name][set.selectableItems[i].name];
                     GUIContent content = new GUIContent();
-                    content.tooltip = string.Format("Hold {0} to {1} all {2}", arg0: ModifierKey.ToString(), arg1: currentState ? "remove" : "install", arg2: set.guiName);
+                    content.tooltip = string.Format(format: uiEngineRingTooltip
+                                                  , arg0: ModifierKey.ToString()
+                                                  , arg1: currentState ? uiRemove : uiInstall
+                                                  , arg2: set.guiName);
                     if (GUI.Toggle(tmpPosition, currentState, content, engineStyle) != currentState)
                     {
                         ProcessEngineButtonEvent(pState: !currentState
