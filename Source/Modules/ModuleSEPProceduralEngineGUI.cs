@@ -7,11 +7,13 @@ using StarshipExpansionProject.Utils.DataTypes;
 using KSP.Localization;
 // TODO: Remove unused items from State dict, probably in OnLoad? 
 //       Throw error if State dict already contains a key at load time
-//       enable relationships Need actual set state still later on
 //       Symmetry
 //       Actually Disable tranforms
 //       Actually toggle nodes
-//       fix weird colliders on the engines in ui
+//       Update Mass
+//       Update Thrust
+//       investigate if the processing of relationships could be made better by only processing selectables which have a relationship to the changed group then adding any selectables that change.
+//       bugged scale if not centered
 
 namespace StarshipExpansionProject.Modules
 {
@@ -48,10 +50,26 @@ namespace StarshipExpansionProject.Modules
         public string transformNameSeperator = string.Empty;
 
         [KSPField(isPersistant = true)]
-        public PersistentDictionaryValueTypeKey<string, PersistentDictionaryValueTypes<string, bool>> State;
+        public PersistentDictionaryValueTypeKey<string, PersistentDictionaryValueTypes<string, bool>> State = new PersistentDictionaryValueTypeKey<string, PersistentDictionaryValueTypes<string, bool>>();
 
         [KSPField(isPersistant = true)]
         public int activeEngineType = 0;
+
+        [KSPField]
+        public string modifierKey = "LeftShift";
+        private KeyCode? _modifierKey;
+        public KeyCode ModifierKey
+        {
+            get
+            {
+                if (_modifierKey == null)
+                {
+                    _modifierKey = (KeyCode) Enum.Parse(typeof(KeyCode), modifierKey);
+                }
+                return (KeyCode) _modifierKey;
+            }
+        }
+
 
         [KSPEvent(guiActive = false, guiActiveEditor = true, guiActiveUnfocused = false, guiName = "#LOC_SEP_SelectEnginesGUIName")]
         public void OpenGui()
@@ -62,7 +80,7 @@ namespace StarshipExpansionProject.Modules
 
         #region Private UI Fields
         // Private UI Fields
-        private Rect windowRect = new Rect(250, 200, 250, 374);
+        private Rect windowRect = new Rect(275, 200, 250, 374);
         private bool isDragging = false;
         private bool isVisible = false;
         private Vector2 customSelectablesScrollPosition = Vector2.zero;
@@ -210,8 +228,7 @@ namespace StarshipExpansionProject.Modules
             if (customSelectables == null) customSelectables = new List<CustomSelectable>();
             if (engineSets == null) engineSets = new List<EngineSet>();
             if (engineTypes == null) engineTypes = new List<EngineType>();
-            if (State == null && HighLogic.LoadedScene == GameScenes.LOADING) State = new PersistentDictionaryValueTypeKey<string, PersistentDictionaryValueTypes<string, bool>>();
-            else if (State == null) GetStateFromPrefab();
+            else if (State.Keys.Count == 0) GetStateFromPrefab();
             if (transforms == null
              || node.HasNode(CustomSelectableNodeName)
              || node.HasNode(EngineTypeNodeName))
@@ -250,12 +267,9 @@ namespace StarshipExpansionProject.Modules
             if (isVisible) windowRect = GUI.Window(uiIndex, windowRect, DrawUI, uiName);
         }
 
-        public void FixedUpdate()
-        {
-        }
         public void Start()
         {
-            if (State == null) GetStateFromPrefab();
+            if (State.Keys.Count == 0) GetStateFromPrefab();
         }
         #endregion
 
@@ -549,7 +563,6 @@ namespace StarshipExpansionProject.Modules
                 part.AddAttachNode(node);
             }
         }
-
         private void DrawUI(int windowIndex)
         {
             // Setup
@@ -623,10 +636,20 @@ namespace StarshipExpansionProject.Modules
                 }
                 GUIContent content = new GUIContent(selectable.guiName);
                 if (tooltips.Count != 0) content.tooltip = string.Join("\n", tooltips);
-                if (GUILayout.Toggle(true, content, toggleStyle) != true)
+                if (!State.ContainsKey(selectable.name) || !State[selectable.name].ContainsKey(selectable.name))
                 {
-                    //State[selectable.name][selectable.name] = !State[selectable.name][selectable.name];
-                    Debug.Log("Mock Toggle " + selectable.name);
+                    Debug.LogError($"[{MODULENAME}] No state found for {selectable.name} using true");
+                    if (!State.ContainsKey(selectable.name))
+                        State[selectable.name] = new PersistentDictionaryValueTypes<string, bool> { { selectable.name, true } };
+                    else
+                    {
+                        State[selectable.name][selectable.name] = true;
+                    }
+                }
+                bool currentState = State[selectable.name][selectable.name];
+                if (GUILayout.Toggle(currentState, content, toggleStyle) != currentState)
+                {
+                    ProcessSelectableButtonEvent(pState: !currentState, pSelectable: selectable);
                 }
                 if (!GUI.enabled)
                 {
@@ -651,11 +674,25 @@ namespace StarshipExpansionProject.Modules
                     float tmpX = canvasRect.x + canvasRect.width / 2 + EnginePositionsDict[set.name][i].x * uiScale - engineSize / 2;
                     float tmpY = canvasRect.y + canvasRect.height / 2 + EnginePositionsDict[set.name][i].y * uiScale - engineSize / 2;
                     var tmpPosition = new Rect(tmpX, tmpY, engineSize, engineSize);
-                    GUIContent content = new GUIContent();
-                    content.tooltip = string.Format("Hold shift to {0} all {1}", arg0: true ? "remove" : "install", set.guiName);
-                    if (GUI.Toggle(tmpPosition, true, content, engineStyle) != true)
+                    if (!State.ContainsKey(set.name) || !State[set.name].ContainsKey(set.selectableItems[i].name))
                     {
-                        Debug.Log($"Mock Toggle {set.name} : {set.selectableItems[i].name}");
+                        Debug.LogError($"[{MODULENAME}] No state found for {set.name} : {set.selectableItems[i].name} using true");
+                        if (!State.ContainsKey(set.name))
+                            State[set.name] = new PersistentDictionaryValueTypes<string, bool> { { set.selectableItems[i].name, true } };
+                        else
+                        {
+                            State[set.name][set.selectableItems[i].name] = true;
+                        }
+                    }
+                    bool currentState = State[set.name][set.selectableItems[i].name];
+                    GUIContent content = new GUIContent();
+                    content.tooltip = string.Format("Hold {0} to {1} all {2}", arg0: ModifierKey.ToString(), arg1: currentState ? "remove" : "install", arg2: set.guiName);
+                    if (GUI.Toggle(tmpPosition, currentState, content, engineStyle) != currentState)
+                    {
+                        ProcessEngineButtonEvent(pState: !currentState
+                                               , pEngineSet: set
+                                               , pSelectableIndex: i
+                                               , pModifierPressed: Input.GetKey(ModifierKey));
                     }
                 }
             }
@@ -705,19 +742,92 @@ namespace StarshipExpansionProject.Modules
                 uiTooltipTime = 0;
             }
         }
-
         public void UpdateActiveEngineType(int dir)
         {
             activeEngineType = (activeEngineType + dir + engineTypes.Count) % engineTypes.Count;
+            foreach (var set in EngineSetDict[activeEngineType])
+            {
+                SetRelationshipState(set.name);
+            }
+            foreach (var selectable in SelectablesDict[activeEngineType])
+            {
+                SetRelationshipState(selectable.name);
+            }
+            ProcessRelationships();
         }
+        public void ProcessSelectableButtonEvent(bool pState, CustomSelectable pSelectable)
+        {
+            if (!State.TryGetValue(pSelectable.name, out var innerDictionary))
+            {
+                State[pSelectable.name] = new PersistentDictionaryValueTypes<string, bool> { { pSelectable.name, pState } };
+            }
+            else
+            {
+                innerDictionary[pSelectable.name] = pState;
+            }
 
+            SetRelationshipState(pGroupName: pSelectable.name);
+            ProcessRelationships();
+        }
+        public void ProcessEngineButtonEvent(bool pState, EngineSet pEngineSet, int pSelectableIndex, bool pModifierPressed)
+        {
+            if (!State.ContainsKey(pEngineSet.name))
+            {
+                State[pEngineSet.name] = new PersistentDictionaryValueTypes<string, bool>();
+            }
+
+            if (pModifierPressed)
+            {
+                for (int i = 0; i < pEngineSet.selectableItems.Count; i++)
+                {
+                    State[pEngineSet.name][pEngineSet.selectableItems[i].name] = pState;
+                }
+            }
+            else
+            {
+                State[pEngineSet.name][pEngineSet.selectableItems[pSelectableIndex].name] = pState;
+            }
+
+            SetRelationshipState(pGroupName: pEngineSet.name);
+            ProcessRelationships();
+        }
+        public void ProcessRelationships()
+        {
+            for (int i = 0; i < SelectablesDict[activeEngineType].Count + 1; i++)
+            {
+                if (i > SelectablesDict[activeEngineType].Count)
+                {
+                    Debug.LogError("Recursive Relationship Loop active, module might be left in an unstable state");
+                    break;
+                }
+
+                List<string> changedGroups = new List<string>();
+                foreach (var selectable in SelectablesDict[activeEngineType])
+                {
+                    bool currentState = State[selectable.name][selectable.name];
+
+                    foreach (var rel in selectable.relationships)
+                    {
+                        if (IsDisabledByRelationship(rel) && currentState == rel.invertRelationship)
+                        {
+                            State[selectable.name][selectable.name] = !rel.invertRelationship;
+                            if (!changedGroups.Contains(selectable.name)) changedGroups.Add(selectable.name);
+                        }
+                    }
+                }
+                if (changedGroups.Count == 0) break;
+                foreach (var group in changedGroups)
+                {
+                    SetRelationshipState(group);
+                }
+            }
+        }
         public bool IsDisabledByRelationship(Relationship pRelationship, int pEngineType = -1)
         {
             if (pEngineType == -1) pEngineType = activeEngineType;
             if (!RelationshipsDict[pEngineType].ContainsKey(pRelationship.referencedGroupName)) return false;
             return RelationshipsDict[pEngineType][pRelationship.referencedGroupName][pRelationship.typeRelationship];
         }
-
         public void SetRelationshipState(string pGroupName, int pEngineType = -1)
         {
             if (pEngineType == -1) pEngineType = activeEngineType;
@@ -732,11 +842,13 @@ namespace StarshipExpansionProject.Modules
             if (!_relationshipsDict.ContainsKey(pEngineType)) _relationshipsDict[pEngineType] = new Dictionary<string, Dictionary<RelationshipType, bool>>();
             _relationshipsDict[pEngineType][pGroupName] = newStates;
         }
-
         public void GetStateFromPrefab()
         {
             var prefab = part.partInfo.partPrefab;
-            State = ((ModuleSEPProceduralEngineGUI) prefab.Modules.GetModule(moduleName)).State;
+            State = new PersistentDictionaryValueTypeKey<string, PersistentDictionaryValueTypes<string, bool>>();
+            var tmpNode = new ConfigNode(nameof(State));
+            ((ModuleSEPProceduralEngineGUI) prefab.Modules.GetModule(moduleName)).State.Save(tmpNode);
+            State.Load(tmpNode);
         }
         #endregion
     }
