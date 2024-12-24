@@ -7,10 +7,11 @@ using StarshipExpansionProject.Utils.DataTypes;
 using KSP.Localization;
 // TODO: Remove unused items from State dict, probably in OnLoad? 
 //       Throw error if State dict already contains a key at load time
-//       enable relationships
+//       enable relationships Need actual set state still later on
 //       Symmetry
 //       Actually Disable tranforms
 //       Actually toggle nodes
+//       fix weird colliders on the engines in ui
 
 namespace StarshipExpansionProject.Modules
 {
@@ -46,11 +47,8 @@ namespace StarshipExpansionProject.Modules
         [KSPField]
         public string transformNameSeperator = string.Empty;
 
-        [KSPField]
-        public float engineSize = 20;
-
         [KSPField(isPersistant = true)]
-        public PersistentDictionaryValueTypeKey<string, PersistentDictionaryValueTypes<string, bool>> State = new PersistentDictionaryValueTypeKey<string, PersistentDictionaryValueTypes<string, bool>>();
+        public PersistentDictionaryValueTypeKey<string, PersistentDictionaryValueTypes<string, bool>> State;
 
         [KSPField(isPersistant = true)]
         public int activeEngineType = 0;
@@ -99,7 +97,26 @@ namespace StarshipExpansionProject.Modules
                 return (float) _uiScale;
             }
         }
-
+        private Texture2D _uiTexture;
+        private Texture2D uiTexture
+        {
+            get
+            {
+                if (_uiTexture == null)
+                {
+                    _uiTexture = new Texture2D(2, 2);
+                    Color color = new Color(0, 0, 0, 0.8f);
+                    Color[] pixels = new Color[2 * 2];
+                    for (int i = 0; i < pixels.Length; i++)
+                        pixels[i] = color;
+                    _uiTexture.SetPixels(pixels);
+                    _uiTexture.Apply();
+                }
+                return _uiTexture;
+            }
+        }
+        private float engineSize = 20;
+        private float uiTooltipTime;
         #endregion
 
         #region Private Fields
@@ -159,6 +176,30 @@ namespace StarshipExpansionProject.Modules
                 return _enginePositionsDict;
             }
         }
+
+        private Dictionary<int, Dictionary<string, Dictionary<RelationshipType, bool>>> _relationshipsDict;
+        private Dictionary<int, Dictionary<string, Dictionary<RelationshipType, bool>>> RelationshipsDict
+        {
+            get
+            {
+                if (_relationshipsDict == null)
+                {
+                    _relationshipsDict = new Dictionary<int, Dictionary<string, Dictionary<RelationshipType, bool>>>();
+                    for (int i = 0; i < engineTypes.Count(); i++)
+                    {
+                        for (int j = 0; j < EngineSetDict[i].Count; j++)
+                        {
+                            SetRelationshipState(EngineSetDict[i][j].name, pEngineType: i);
+                        }
+                        for (int j = 0; j < SelectablesDict[i].Count; j++)
+                        {
+                            SetRelationshipState(SelectablesDict[i][j].name, pEngineType: i);
+                        }
+                    }
+                }
+                return _relationshipsDict;
+            }
+        }
         #endregion
 
         #region KSP Methods
@@ -169,6 +210,8 @@ namespace StarshipExpansionProject.Modules
             if (customSelectables == null) customSelectables = new List<CustomSelectable>();
             if (engineSets == null) engineSets = new List<EngineSet>();
             if (engineTypes == null) engineTypes = new List<EngineType>();
+            if (State == null && HighLogic.LoadedScene == GameScenes.LOADING) State = new PersistentDictionaryValueTypeKey<string, PersistentDictionaryValueTypes<string, bool>>();
+            else if (State == null) GetStateFromPrefab();
             if (transforms == null
              || node.HasNode(CustomSelectableNodeName)
              || node.HasNode(EngineTypeNodeName))
@@ -177,6 +220,7 @@ namespace StarshipExpansionProject.Modules
                 _selectablesDict = null;
                 _engineSetDict = null;
                 _enginePositionsDict = null;
+                _relationshipsDict = null;
                 _uiScale = null;
             }
 
@@ -211,6 +255,7 @@ namespace StarshipExpansionProject.Modules
         }
         public void Start()
         {
+            if (State == null) GetStateFromPrefab();
         }
         #endregion
 
@@ -309,9 +354,21 @@ namespace StarshipExpansionProject.Modules
                         tmpRelationship.referencedGroupName = tmpNode.GetValue(nameof(tmpRelationship.referencedGroupName));
                     else vml.Add((VmlSeverity.Error, $"{CustomSelectableNodeName} \"{tmpRelationship.name}\" has no value {nameof(tmpRelationship.referencedGroupName)}"));
 
+                    if (tmpNode.HasValue(nameof(tmpRelationship.guiContext)))
+                        tmpRelationship.guiContext = tmpNode.GetValue(nameof(tmpRelationship.guiContext));
+                    else
+                    {
+                        tmpRelationship.guiContext = $"Locked by {tmpRelationship.referencedGroupName} due to {tmpRelationship.typeRelationship.ToString()}";
+                        vml.Add((VmlSeverity.Warning, $"{CustomSelectableNodeName} \"{tmpRelationship.name}\" has no value {nameof(tmpRelationship.guiContext)}, using default {tmpRelationship.guiContext}"));
+                    }
+
                     if (tmpNode.HasValue(nameof(tmpRelationship.invertRelationship)))
                         tmpRelationship.invertRelationship = bool.Parse(tmpNode.GetValue(nameof(tmpRelationship.invertRelationship)));
                     else vml.Add((VmlSeverity.Information, $"{CustomSelectableNodeName} \"{tmpRelationship.name}\" has no value {nameof(tmpRelationship.invertRelationship)}, using default: {tmpRelationship.invertRelationship}"));
+
+                    if (tmpNode.HasValue(nameof(tmpRelationship.typeRelationship))
+                     && Enum.TryParse(tmpNode.GetValue(nameof(tmpRelationship.typeRelationship)), out tmpRelationship.typeRelationship)) { }
+                    else vml.Add((VmlSeverity.Information, $"{CustomSelectableNodeName} \"{tmpRelationship.name}\" has no value {nameof(tmpRelationship.typeRelationship)}, using default: {tmpRelationship.typeRelationship}"));
 
                     if (tmpRelationship.name == string.Empty) continue;
 
@@ -499,15 +556,16 @@ namespace StarshipExpansionProject.Modules
             GUI.DragWindow(new Rect(0, 0, windowRect.width - 20, 20));
             float barButtonWidth = 60;
             float barButtonHeight = 35;
-            
+
             Rect closeButtonRect = new Rect(windowRect.width - 22, 2, 20, 20);
             GUIStyle buttonStyle = GUI.skin.button;
             buttonStyle.alignment = TextAnchor.MiddleCenter;
             buttonStyle.fontSize = 15;
             GUIStyle labelStyle = GUI.skin.label;
             labelStyle.alignment = TextAnchor.MiddleCenter;
-            GUIStyle toggleStyle = GUI.skin.toggle;
+            GUIStyle toggleStyle = new GUIStyle(GUI.skin.toggle);
             toggleStyle.wordWrap = true;
+            GUIStyle engineStyle = new GUIStyle(GUI.skin.toggle);
 
             GUI.skin.window.padding = new RectOffset(0, 0, 20, 0);
 
@@ -552,11 +610,25 @@ namespace StarshipExpansionProject.Modules
             GUILayout.BeginVertical();
             foreach(var selectable in SelectablesDict[activeEngineType])
             {
-                // Worry about disabling based on relationships.
-                if (GUILayout.Toggle(true, selectable.guiName, toggleStyle))
+                List<string> tooltips = new List<string>();
+                foreach (var relationship in selectable.relationships)
+                {
+                    if (IsDisabledByRelationship(relationship))
+                    {
+                        GUI.enabled = false;
+                        tooltips.Add(relationship.guiContext);
+                    }
+                }
+                GUIContent content = new GUIContent(selectable.name);
+                if (tooltips.Count != 0) content.tooltip = string.Join("\n", tooltips);
+                if (GUILayout.Toggle(true, content, toggleStyle) != true)
                 {
                     //State[selectable.name][selectable.name] = !State[selectable.name][selectable.name];
                     Debug.Log("Mock Toggle " + selectable.name);
+                }
+                if (!GUI.enabled)
+                {
+                    GUI.enabled = true;
                 }
             }
 
@@ -565,36 +637,104 @@ namespace StarshipExpansionProject.Modules
             GUILayout.Space(3);
 
             // Engines
-            //Rect canvasRect = GUILayoutUtility.GetRect(windowWidth - GUI.skin.window.border.horizontal*16, windowWidth - GUI.skin.window.border.horizontal*6);
-            //GUI.Box(canvasRect, GUIContent.none, GUI.skin.box);
             GUILayout.BeginVertical(GUI.skin.box, GUILayout.Height(uiWidth));
             GUILayout.Label(GUIContent.none);
             GUILayout.EndVertical();
-            if (Event.current.type == EventType.Repaint)
+
+            Rect canvasRect = GUILayoutUtility.GetLastRect();
+            foreach (var set in EngineSetDict[activeEngineType])
             {
-                Rect canvasRect = GUILayoutUtility.GetLastRect();
-                foreach (var set in EngineSetDict[activeEngineType])
+                for (int i = 0; i < set.selectableItems.Count; i++)
                 {
-                    for (int i = 0; i < set.selectableItems.Count; i++)
+                    float tmpX = canvasRect.x + canvasRect.width / 2 + EnginePositionsDict[set.name][i].x * uiScale - engineSize / 2;
+                    float tmpY = canvasRect.y + canvasRect.height / 2 + EnginePositionsDict[set.name][i].y * uiScale - engineSize / 2;
+                    var tmpPosition = new Rect(tmpX, tmpY, engineSize, engineSize);
+                    GUIContent content = GUIContent.none;
+                    content.tooltip = string.Format("Hold shift to {0} all {1}", arg0: true ? "remove" : "install", set.guiName);
+                    if(GUI.Toggle(tmpPosition, true, content, engineStyle) != true)
                     {
-                        float tmpX = canvasRect.x + canvasRect.width / 2 + EnginePositionsDict[set.name][i].x * uiScale - engineSize / 2;
-                        float tmpY = canvasRect.y + canvasRect.height / 2 + EnginePositionsDict[set.name][i].y * uiScale - engineSize / 2;
-                        var tmpPosition = new Rect(tmpX, tmpY, engineSize, engineSize);
-                        if(GUI.Toggle(tmpPosition, true, GUIContent.none))
-                        {
-                            Debug.Log($"Mock Toggle {set.name} : {set.selectableItems[i].name}");
-                        }
+                        Debug.Log($"Mock Toggle {set.name} : {set.selectableItems[i].name}");
                     }
                 }
-            }            
+            }
             GUILayout.Space(3);
 
             GUILayout.EndVertical();
+
+            // Tooltip
+            if (!string.IsNullOrWhiteSpace(GUI.tooltip))
+            {
+                if (uiTooltipTime == 0f)
+                {
+                    uiTooltipTime = Time.time;
+                }
+                else if (Time.time - uiTooltipTime >= 0.75f)
+                {
+                    Vector2 mousePos = Event.current.mousePosition;
+                    GUIStyle tooltipStyle = new GUIStyle(GUI.skin.box);
+                    tooltipStyle.wordWrap = true;
+                    tooltipStyle.alignment = TextAnchor.UpperLeft;
+                    tooltipStyle.normal.background = uiTexture;
+                    GUIContent content = new GUIContent(GUI.tooltip);
+                    Vector2 tooltipSize = tooltipStyle.CalcSize(content);
+                    if (tooltipSize.x > windowRect.width)
+                    {
+                        tooltipSize.x = windowRect.width;
+                        tooltipSize.y = tooltipStyle.CalcHeight(content, windowRect.width);
+                    }
+                    float tooltipX = mousePos.x + engineSize;
+                    float tooltipY = mousePos.y;
+
+                    if (tooltipX + tooltipSize.x > windowRect.width)
+                    {
+                        tooltipX = windowRect.width - tooltipSize.x;
+                        tooltipY += engineSize;
+                    }
+                    if (tooltipY + tooltipSize.y > windowRect.height)
+                    {
+                        tooltipY = windowRect.height - tooltipSize.y;
+                    }
+                    Rect tooltipRect = new Rect(tooltipX, tooltipY, tooltipSize.x, tooltipSize.y);
+                    GUI.Box(tooltipRect, GUI.tooltip, tooltipStyle);
+                }
+            }
+            else if (Event.current.type == EventType.Repaint)
+            {
+                uiTooltipTime = 0;
+            }
         }
 
         public void UpdateActiveEngineType(int dir)
         {
             activeEngineType = (activeEngineType + dir + engineTypes.Count) % engineTypes.Count;
+        }
+
+        public bool IsDisabledByRelationship(Relationship pRelationship, int pEngineType = -1)
+        {
+            if (pEngineType == -1) pEngineType = activeEngineType;
+            if (!RelationshipsDict[pEngineType].ContainsKey(pRelationship.referencedGroupName)) return false;
+            return RelationshipsDict[pEngineType][pRelationship.referencedGroupName][pRelationship.typeRelationship];
+        }
+
+        public void SetRelationshipState(string pGroupName, int pEngineType = -1)
+        {
+            if (pEngineType == -1) pEngineType = activeEngineType;
+            var newStates = new Dictionary<RelationshipType, bool>
+            {
+                { RelationshipType.AllEnabled, State[pGroupName].All(kvp => kvp.Value) },
+                { RelationshipType.AllDisabled, State[pGroupName].All(kvp => !kvp.Value) },
+                { RelationshipType.AnyEnabled, State[pGroupName].Any(kvp => kvp.Value) },
+                { RelationshipType.AnyDisabled, State[pGroupName].Any(kvp => !kvp.Value) },
+            };
+
+            if (!_relationshipsDict.ContainsKey(pEngineType)) _relationshipsDict[pEngineType] = new Dictionary<string, Dictionary<RelationshipType, bool>>();
+            _relationshipsDict[pEngineType][pGroupName] = newStates;
+        }
+
+        public void GetStateFromPrefab()
+        {
+            var prefab = part.partInfo.partPrefab;
+            State = ((ModuleSEPProceduralEngineGUI) prefab.Modules.GetModule(moduleName)).State;
         }
         #endregion
     }
@@ -641,7 +781,9 @@ namespace StarshipExpansionProject.Modules
     public class Relationship : ScriptableObject
     {
         public string referencedGroupName;
+        public string guiContext;
         public bool invertRelationship = false;
+        public RelationshipType typeRelationship = RelationshipType.AnyEnabled;
     }
 
     public enum VmlSeverity
@@ -649,6 +791,14 @@ namespace StarshipExpansionProject.Modules
         Error,
         Warning,
         Information,
+    }
+
+    public enum RelationshipType
+    {
+        AllEnabled,
+        AllDisabled,
+        AnyEnabled,
+        AnyDisabled,
     }
     #endregion
 }
