@@ -13,7 +13,7 @@ using KSP.Localization;
 //       Update Mass
 //       Update Thrust
 //       investigate if the processing of relationships could be made better by only processing selectables which have a relationship to the changed group then adding any selectables that change.
-//       bugged scale if not centered
+//       Localisation
 
 namespace StarshipExpansionProject.Modules
 {
@@ -186,7 +186,7 @@ namespace StarshipExpansionProject.Modules
                         var tmpTransformPositions = engineSets[i]
                                                    .selectableItems
                                                    .Select(t => part.transform
-                                                               .InverseTransformVector(transforms[t.transformIndexes[0]].position));
+                                                               .InverseTransformPoint(transforms[t.transformIndexes[0]].position));
                         _enginePositionsDict.Add(engineSets[i].name
                                                , tmpTransformPositions.Select(p => new Vector2(p.x, p.z)).ToList());
                     }
