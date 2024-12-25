@@ -12,7 +12,7 @@ using KSP.Localization;
 //       Actually toggle nodes
 //       Update Mass
 //       Update Thrust
-//       investigate if the processing of relationships could be made better by only processing selectables which have a relationship to the changed group then adding any selectables that change.
+//       investigate if the processing of nodes and transforms could be made better by only processing items from groups that have been changed.
 
 namespace StarshipExpansionProject.Modules
 {
@@ -84,7 +84,7 @@ namespace StarshipExpansionProject.Modules
         private bool isVisible = false;
         private Vector2 customSelectablesScrollPosition = Vector2.zero;
         private string uiName = Localizer.GetStringByTag("#LOC_SEP_GUILabelName");
-        private string uiEngineRingTooltip = Localizer.GetStringByTag("#LOC_SEP_EngineRingTooltip");
+        private string uiEngineRingTooltip = Localizer.Format("#LOC_SEP_EngineRingTooltip", new object[] { "{0}", "{1}", "{2}" });
         private string uiRemove = Localizer.GetStringByTag("#LOC_SEP_remove");
         private string uiInstall = Localizer.GetStringByTag("#LOC_SEP_install");
         private float uiWidth = 236;
@@ -141,20 +141,20 @@ namespace StarshipExpansionProject.Modules
 
         #region Private Fields
         // Private Fields
-        private Dictionary<int, List<CustomSelectable>> _selectablesDict;
-        private Dictionary<int, List<CustomSelectable>> SelectablesDict
+        private Dictionary<int, List<CustomSelectable>> _customSelectablesDict;
+        private Dictionary<int, List<CustomSelectable>> CustomSelectablesDict
         {
             get
             {
-                if (_selectablesDict == null)
+                if (_customSelectablesDict == null)
                 {
-                    _selectablesDict = new Dictionary<int, List<CustomSelectable>>();
+                    _customSelectablesDict = new Dictionary<int, List<CustomSelectable>>();
                     for (int i = 0; i < engineTypes.Count; i++)
                     {
-                        _selectablesDict.Add(i, customSelectables.Where(s => engineTypes[i].CustomSelectableNames.Contains(s.name)).ToList());
+                        _customSelectablesDict.Add(i, customSelectables.Where(s => engineTypes[i].CustomSelectableNames.Contains(s.name)).ToList());
                     }
                 }
-                return _selectablesDict;
+                return _customSelectablesDict;
             }
         }
 
@@ -211,13 +211,95 @@ namespace StarshipExpansionProject.Modules
                         {
                             SetRelationshipState(EngineSetDict[i][j].name, pEngineType: i);
                         }
-                        for (int j = 0; j < SelectablesDict[i].Count; j++)
+                        for (int j = 0; j < CustomSelectablesDict[i].Count; j++)
                         {
-                            SetRelationshipState(SelectablesDict[i][j].name, pEngineType: i);
+                            SetRelationshipState(CustomSelectablesDict[i][j].name, pEngineType: i);
                         }
                     }
                 }
                 return _relationshipsDict;
+            }
+        }
+
+        private Dictionary<int, Dictionary<string, List<CustomSelectable>>> _relatedSelectablesDict;
+        private Dictionary<int, Dictionary<string, List<CustomSelectable>>> RelatedSelectablesDict
+        {
+            get
+            {
+                if (_relatedSelectablesDict == null)
+                {
+                    _relatedSelectablesDict = new Dictionary<int, Dictionary<string, List<CustomSelectable>>>();
+                    foreach(var kvp in CustomSelectablesDict)
+                    {
+                        _relatedSelectablesDict.Add(kvp.Key, new Dictionary<string, List<CustomSelectable>>());
+                        foreach(var selectable in kvp.Value)
+                        {
+                            foreach(var rel in selectable.relationships)
+                            {
+                                if(!_relatedSelectablesDict[kvp.Key].ContainsKey(rel.referencedGroupName))
+                                    _relatedSelectablesDict[kvp.Key][rel.referencedGroupName] = new List<CustomSelectable>();
+
+                                _relatedSelectablesDict[kvp.Key][rel.referencedGroupName].Add(selectable);
+                            }
+                        }
+                    }
+                }
+
+                return _relatedSelectablesDict;
+            }
+        }
+
+        private Dictionary<int, Dictionary<string, List<SelectableItem>>> _activeSelectableItemsDict;
+        private Dictionary<int, Dictionary<string, List<SelectableItem>>> ActiveSelectableItemsDict
+        {
+            get
+            {
+                if (_activeSelectableItemsDict == null)
+                {
+                    _activeSelectableItemsDict = new Dictionary<int, Dictionary<string, List<SelectableItem>>>();
+                    for (int i = 0; i < engineTypes.Count; i++)
+                    {
+                        var tmpDict = new Dictionary<string, List<SelectableItem>>();
+                        foreach (var set in EngineSetDict[i])
+                        {
+                            tmpDict.Add(set.name, set.selectableItems);
+                        }
+                        foreach (var selectable in CustomSelectablesDict[i])
+                        {
+                            tmpDict.Add(selectable.name, selectable.selectableItems);
+                        }
+                        _activeSelectableItemsDict.Add(i, tmpDict);
+                    }
+                }
+                return _activeSelectableItemsDict;
+            }
+        }
+
+        private Dictionary<int, List<SelectableItem>> _inactiveSelectableItemsDict;
+        private Dictionary<int, List<SelectableItem>> InactiveSelectableItemsDict
+        {
+            get
+            {
+                if (_inactiveSelectableItemsDict == null)
+                {
+                    _inactiveSelectableItemsDict = new Dictionary<int, List<SelectableItem>>();
+                    for (int i = 0; i < engineTypes.Count; i++)
+                    {
+                        var tmpList = new List<SelectableItem>();
+                        foreach (var set in engineSets)
+                        {
+                            if (EngineSetDict[i].Contains(set)) continue;
+                            tmpList.AddRange(set.selectableItems);
+                        }
+                        foreach (var selectable in customSelectables)
+                        {
+                            if (CustomSelectablesDict[i].Contains(selectable)) continue;
+                            tmpList.AddRange(selectable.selectableItems);
+                        }
+                        _inactiveSelectableItemsDict.Add(i, tmpList);
+                    }
+                }
+                return _inactiveSelectableItemsDict;
             }
         }
         #endregion
@@ -236,7 +318,7 @@ namespace StarshipExpansionProject.Modules
              || node.HasNode(EngineTypeNodeName))
             {
                 transforms = new List<Transform>(); // this assumes b9ps sends a complete confnode, just modified
-                _selectablesDict = null;
+                _customSelectablesDict = null;
                 _engineSetDict = null;
                 _enginePositionsDict = null;
                 _relationshipsDict = null;
@@ -302,8 +384,6 @@ namespace StarshipExpansionProject.Modules
             else vml.Add((VmlSeverity.Information, $"{CustomSelectableNodeName} \"{tmpCustomSelectable.name}\" has no value defaultState, using default: {tmpDefaultState}"));
 
             if (!State.ContainsKey(tmpCustomSelectable.name)) State.Add(tmpCustomSelectable.name, new PersistentDictionaryValueTypes<string, bool>());
-            if (!State[tmpCustomSelectable.name].ContainsKey(tmpCustomSelectable.name))
-                State[tmpCustomSelectable.name].Add(tmpCustomSelectable.name, tmpDefaultState);
 
             // Fill Items
             if (node.HasNode("ITEM"))
@@ -354,7 +434,8 @@ namespace StarshipExpansionProject.Modules
                     transforms.AddRange(tmpTransforms);
                     if (tmpItem.nodeId != string.Empty && tmpNodeTransform != null)
                         CreateAttachNodeIfNotExists(NodeId: tmpItem.nodeId, NodeSize: tmpNodeSize);
-
+                    if (!State[tmpCustomSelectable.name].ContainsKey(tmpItem.name))
+                        State[tmpCustomSelectable.name].Add(tmpItem.name, tmpDefaultState);
                     tmpCustomSelectable.selectableItems.Add(tmpItem);
                 }
             }
@@ -625,7 +706,7 @@ namespace StarshipExpansionProject.Modules
                                                                       , GUI.skin.box
                                                                       , GUILayout.Height(60));
             GUILayout.BeginVertical();
-            foreach(var selectable in SelectablesDict[activeEngineType])
+            foreach(var selectable in CustomSelectablesDict[activeEngineType])
             {
                 List<string> tooltips = new List<string>();
                 foreach (var relationship in selectable.relationships)
@@ -638,17 +719,24 @@ namespace StarshipExpansionProject.Modules
                 }
                 GUIContent content = new GUIContent(selectable.guiName);
                 if (tooltips.Count != 0) content.tooltip = string.Join("\n", tooltips);
-                if (!State.ContainsKey(selectable.name) || !State[selectable.name].ContainsKey(selectable.name))
+                if (!State.TryGetValue(selectable.name, out var stateDictionary))
                 {
-                    Debug.LogError($"[{MODULENAME}] No state found for {selectable.name} using true");
-                    if (!State.ContainsKey(selectable.name))
-                        State[selectable.name] = new PersistentDictionaryValueTypes<string, bool> { { selectable.name, true } };
-                    else
+                    Debug.LogError($"[{MODULENAME}] No state found for {selectable.name}. Initializing default state.");
+                    var tmpDict = new PersistentDictionaryValueTypes<string, bool>();
+                    foreach (var item in selectable.selectableItems) tmpDict.Add(item.name, true);
+                    State[selectable.name] = stateDictionary = tmpDict;
+                }
+                else
+                {
+                    foreach (var item in selectable.selectableItems)
                     {
-                        State[selectable.name][selectable.name] = true;
+                        if (!stateDictionary.ContainsKey(item.name))
+                        {
+                            stateDictionary[item.name] = true;
+                        }
                     }
                 }
-                bool currentState = State[selectable.name][selectable.name];
+                bool currentState = State[selectable.name][selectable.selectableItems[0].name];
                 if (GUILayout.Toggle(currentState, content, toggleStyle) != currentState)
                 {
                     ProcessSelectableButtonEvent(pState: !currentState, pSelectable: selectable);
@@ -754,25 +842,28 @@ namespace StarshipExpansionProject.Modules
             {
                 SetRelationshipState(set.name);
             }
-            foreach (var selectable in SelectablesDict[activeEngineType])
+            foreach (var selectable in CustomSelectablesDict[activeEngineType])
             {
                 SetRelationshipState(selectable.name);
             }
-            ProcessRelationships();
+            ProcessRelationships(out _);
+            ProcessTransformState();
+            ProcessThrustState();
         }
         public void ProcessSelectableButtonEvent(bool pState, CustomSelectable pSelectable)
         {
             if (!State.TryGetValue(pSelectable.name, out var innerDictionary))
             {
-                State[pSelectable.name] = new PersistentDictionaryValueTypes<string, bool> { { pSelectable.name, pState } };
+                var tmpDict = new PersistentDictionaryValueTypes<string, bool>();
+                foreach (var item in pSelectable.selectableItems) tmpDict.Add(item.name, pState);
+                State[pSelectable.name] = innerDictionary = tmpDict;
             }
             else
             {
-                innerDictionary[pSelectable.name] = pState;
+                foreach (var item in pSelectable.selectableItems) innerDictionary[item.name] = pState;
             }
 
-            SetRelationshipState(pGroupName: pSelectable.name);
-            ProcessRelationships();
+            ProcessCommonEvent(pGroupName: pSelectable.name);
         }
         public void ProcessEngineButtonEvent(bool pState, EngineSet pEngineSet, int pSelectableIndex, bool pModifierPressed)
         {
@@ -793,21 +884,31 @@ namespace StarshipExpansionProject.Modules
                 State[pEngineSet.name][pEngineSet.selectableItems[pSelectableIndex].name] = pState;
             }
 
-            SetRelationshipState(pGroupName: pEngineSet.name);
-            ProcessRelationships();
+            ProcessCommonEvent(pGroupName: pEngineSet.name);
+            ProcessThrustState(pEngineSet: pEngineSet.name);
         }
-        public void ProcessRelationships()
+        public void ProcessCommonEvent(string pGroupName)
         {
-            for (int i = 0; i < SelectablesDict[activeEngineType].Count + 1; i++)
-            {
-                if (i > SelectablesDict[activeEngineType].Count)
-                {
-                    Debug.LogError("Recursive Relationship Loop active, module might be left in an unstable state");
-                    break;
-                }
+            List<string> changedGroups = new List<string>();
+            SetRelationshipState(pGroupName: pGroupName);
+            if (RelatedSelectablesDict[activeEngineType].ContainsKey(pGroupName))
+                ProcessRelationships(out changedGroups, RelatedSelectablesDict[activeEngineType][pGroupName]);
+            changedGroups.Add(pGroupName);
+            var selectablesDict = changedGroups.ToDictionary(item => item, item => ActiveSelectableItemsDict[activeEngineType][item]);
+            ProcessTransformState(selectablesDict);
+            ProcessMassState();
+        }
+        public void ProcessRelationships(out List<string> oEverChangedGroups, List<CustomSelectable> pSelectables = null)
+        {
+            oEverChangedGroups = new List<string>();
+            if (pSelectables == null || pSelectables.Count == 0)
+                pSelectables = CustomSelectablesDict[activeEngineType];
 
+            // This effectively acts as a while loop, just with a cap on it so it won't go forever if my logic fails somehow.
+            for (int i = 0; i < CustomSelectablesDict[activeEngineType].Count + 1; i++)
+            {
                 List<string> changedGroups = new List<string>();
-                foreach (var selectable in SelectablesDict[activeEngineType])
+                foreach (var selectable in pSelectables)
                 {
                     bool currentState = State[selectable.name][selectable.name];
 
@@ -821,17 +922,57 @@ namespace StarshipExpansionProject.Modules
                     }
                 }
                 if (changedGroups.Count == 0) break;
+                pSelectables = new List<CustomSelectable>();
                 foreach (var group in changedGroups)
                 {
+                    if (oEverChangedGroups.Contains(group))
+                    {
+                        Debug.LogError("Recursive Relationship Loop active, module might be left in an unstable state");
+                        return;
+                    }
+                    else
+                    {
+                        oEverChangedGroups.Add(group);
+                    }
                     SetRelationshipState(group);
+                    if (RelatedSelectablesDict[activeEngineType].ContainsKey(group))
+                        pSelectables.AddRange(RelatedSelectablesDict[activeEngineType][group]);
                 }
             }
         }
-        public bool IsDisabledByRelationship(Relationship pRelationship, int pEngineType = -1)
+        public void ProcessTransformState(Dictionary<string, List<SelectableItem>> pSelectables = null)
         {
-            if (pEngineType == -1) pEngineType = activeEngineType;
-            if (!RelationshipsDict[pEngineType].ContainsKey(pRelationship.referencedGroupName)) return false;
-            return RelationshipsDict[pEngineType][pRelationship.referencedGroupName][pRelationship.typeRelationship];
+            if (pSelectables == null)
+            {
+                // This is init or engine switch, update everything, including disabled types
+            }
+            else
+            {
+                // This means some button event happened and we need to change just the received ones.
+            }
+            Debug.Log("Mock transform change");
+        }
+        public void ProcessMassState()
+        {
+            Debug.Log("Mock mass change");
+        }
+
+        public void ProcessThrustState(string pEngineSet = null)
+        {
+            if (string.IsNullOrWhiteSpace(pEngineSet))
+            {
+                // Process all sets
+            }
+            else
+            {
+                // process this set specifically
+            }
+            Debug.Log("Mock thrust change");
+        }
+        public bool IsDisabledByRelationship(Relationship pRelationship)
+        {
+            if (!RelationshipsDict[activeEngineType].ContainsKey(pRelationship.referencedGroupName)) return false;
+            return RelationshipsDict[activeEngineType][pRelationship.referencedGroupName][pRelationship.typeRelationship];
         }
         public void SetRelationshipState(string pGroupName, int pEngineType = -1)
         {
