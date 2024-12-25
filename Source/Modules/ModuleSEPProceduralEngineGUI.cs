@@ -8,11 +8,8 @@ using KSP.Localization;
 // TODO: Remove unused items from State dict, probably in OnLoad? 
 //       Throw error if State dict already contains a key at load time
 //       Symmetry
-//       Actually Disable tranforms
-//       Actually toggle nodes
 //       Update Mass
 //       Update Thrust
-//       investigate if the processing of nodes and transforms could be made better by only processing items from groups that have been changed.
 
 namespace StarshipExpansionProject.Modules
 {
@@ -68,7 +65,6 @@ namespace StarshipExpansionProject.Modules
                 return (KeyCode) _modifierKey;
             }
         }
-
 
         [KSPEvent(guiActive = false, guiActiveEditor = true, guiActiveUnfocused = false, guiName = "#LOC_SEP_SelectEnginesGUIName")]
         public void OpenGui()
@@ -188,12 +184,39 @@ namespace StarshipExpansionProject.Modules
                         var tmpTransformPositions = engineSets[i]
                                                    .selectableItems
                                                    .Select(t => part.transform
-                                                               .InverseTransformPoint(transforms[t.transformIndexes[0]].position));
+                                                               .InverseTransformPoint(TransformsDict[t.name][0].position));
                         _enginePositionsDict.Add(engineSets[i].name
                                                , tmpTransformPositions.Select(p => new Vector2(p.x, p.z)).ToList());
                     }
                 }
                 return _enginePositionsDict;
+            }
+        }
+
+        private Dictionary<string, List<Transform>> _transformsDict;
+        private Dictionary<string, List<Transform>> TransformsDict
+        {
+            get
+            {
+                if (_transformsDict == null)
+                {
+                    _transformsDict = new Dictionary<string, List<Transform>>();
+                    foreach (var set in engineSets)
+                    {
+                        foreach (SelectableItem selectable in set.selectableItems)
+                        {
+                            _transformsDict.Add(selectable.name, selectable.transformIndexes.Select(i => transforms[i]).ToList());
+                        }
+                    }
+                    foreach (var sel in customSelectables)
+                    {
+                        foreach (SelectableItem selectable in sel.selectableItems)
+                        {
+                            _transformsDict.Add(selectable.name, selectable.transformIndexes.Select(i => transforms[i]).ToList());
+                        }
+                    }
+                }
+                return _transformsDict;
             }
         }
 
@@ -229,14 +252,14 @@ namespace StarshipExpansionProject.Modules
                 if (_relatedSelectablesDict == null)
                 {
                     _relatedSelectablesDict = new Dictionary<int, Dictionary<string, List<CustomSelectable>>>();
-                    foreach(var kvp in CustomSelectablesDict)
+                    foreach (var kvp in CustomSelectablesDict)
                     {
                         _relatedSelectablesDict.Add(kvp.Key, new Dictionary<string, List<CustomSelectable>>());
-                        foreach(var selectable in kvp.Value)
+                        foreach (var selectable in kvp.Value)
                         {
-                            foreach(var rel in selectable.relationships)
+                            foreach (var rel in selectable.relationships)
                             {
-                                if(!_relatedSelectablesDict[kvp.Key].ContainsKey(rel.referencedGroupName))
+                                if (!_relatedSelectablesDict[kvp.Key].ContainsKey(rel.referencedGroupName))
                                     _relatedSelectablesDict[kvp.Key][rel.referencedGroupName] = new List<CustomSelectable>();
 
                                 _relatedSelectablesDict[kvp.Key][rel.referencedGroupName].Add(selectable);
@@ -275,31 +298,42 @@ namespace StarshipExpansionProject.Modules
             }
         }
 
-        private Dictionary<int, List<SelectableItem>> _inactiveSelectableItemsDict;
-        private Dictionary<int, List<SelectableItem>> InactiveSelectableItemsDict
+        private Dictionary<int, Dictionary<string, List<SelectableItem>>> _inactiveSelectableItemsDict;
+        private Dictionary<int, Dictionary<string, List<SelectableItem>>> InactiveSelectableItemsDict
         {
             get
             {
                 if (_inactiveSelectableItemsDict == null)
                 {
-                    _inactiveSelectableItemsDict = new Dictionary<int, List<SelectableItem>>();
+                    _inactiveSelectableItemsDict = new Dictionary<int, Dictionary<string, List<SelectableItem>>>();
                     for (int i = 0; i < engineTypes.Count; i++)
                     {
-                        var tmpList = new List<SelectableItem>();
+                        var tmpDict = new Dictionary<string, List<SelectableItem>>();
                         foreach (var set in engineSets)
                         {
                             if (EngineSetDict[i].Contains(set)) continue;
-                            tmpList.AddRange(set.selectableItems);
+                            tmpDict.Add(set.name, set.selectableItems);
                         }
                         foreach (var selectable in customSelectables)
                         {
                             if (CustomSelectablesDict[i].Contains(selectable)) continue;
-                            tmpList.AddRange(selectable.selectableItems);
+                            tmpDict.Add(selectable.name, selectable.selectableItems);
                         }
-                        _inactiveSelectableItemsDict.Add(i, tmpList);
+                        _inactiveSelectableItemsDict.Add(i, tmpDict);
                     }
                 }
                 return _inactiveSelectableItemsDict;
+            }
+        }
+
+        private Dictionary<string, AttachNode> _attachedNodesDict;
+        private Dictionary<string, AttachNode> AttachedNodesDict
+        {
+            get
+            {
+                if (_attachedNodesDict == null)
+                    _attachedNodesDict = part.attachNodes.ToDictionary(item => item.id, item => item);
+                return _attachedNodesDict;
             }
         }
         #endregion
@@ -309,21 +343,28 @@ namespace StarshipExpansionProject.Modules
         public override void OnLoad(ConfigNode node)
         {
             base.OnLoad(node);
-            if (customSelectables == null) customSelectables = new List<CustomSelectable>();
-            if (engineSets == null) engineSets = new List<EngineSet>();
-            if (engineTypes == null) engineTypes = new List<EngineType>();
-            else if (State.Keys.Count == 0) GetStateFromPrefab();
-            if (transforms == null
-             || node.HasNode(CustomSelectableNodeName)
-             || node.HasNode(EngineTypeNodeName))
+            // this assumes b9ps sends a complete confnode, just modified
+            bool isInitialise = node.HasNode(CustomSelectableNodeName) || node.HasNode(EngineSetNodeName) || node.HasNode(EngineTypeNodeName);
+
+            if (customSelectables == null || isInitialise) customSelectables = new List<CustomSelectable>();
+            if (engineSets == null || isInitialise) engineSets = new List<EngineSet>();
+            if (engineTypes == null || isInitialise) engineTypes = new List<EngineType>();
+            if (transforms == null || isInitialise) transforms = new List<Transform>();
+            if (isInitialise)
             {
-                transforms = new List<Transform>(); // this assumes b9ps sends a complete confnode, just modified
                 _customSelectablesDict = null;
                 _engineSetDict = null;
                 _enginePositionsDict = null;
+                _transformsDict = null;
                 _relationshipsDict = null;
+                _relatedSelectablesDict = null;
+                _activeSelectableItemsDict = null;
+                _inactiveSelectableItemsDict = null;
+                _attachedNodesDict = null;
+
                 _uiScale = null;
             }
+            else if (State.Keys.Count == 0) GetStateFromPrefab();
 
             foreach (var tmpNode in node.GetNodes())
             {
@@ -344,6 +385,13 @@ namespace StarshipExpansionProject.Modules
                         break;
                 }
             }
+
+            if (!isInitialise)
+            {
+                ProcessRelationships(out _);
+                ProcessMassState();
+                ProcessThrustState();
+            }
         }
 
         public void OnGUI()
@@ -354,6 +402,10 @@ namespace StarshipExpansionProject.Modules
         public void Start()
         {
             if (State.Keys.Count == 0) GetStateFromPrefab();
+            ProcessRelationships(out _);
+            ProcessTransformState();
+            ProcessMassState();
+            ProcessThrustState();
         }
         #endregion
 
@@ -848,6 +900,7 @@ namespace StarshipExpansionProject.Modules
             }
             ProcessRelationships(out _);
             ProcessTransformState();
+            ProcessMassState();
             ProcessThrustState();
         }
         public void ProcessSelectableButtonEvent(bool pState, CustomSelectable pSelectable)
@@ -910,13 +963,14 @@ namespace StarshipExpansionProject.Modules
                 List<string> changedGroups = new List<string>();
                 foreach (var selectable in pSelectables)
                 {
-                    bool currentState = State[selectable.name][selectable.name];
+                    bool currentState = State[selectable.name].First().Value;
 
                     foreach (var rel in selectable.relationships)
                     {
                         if (IsDisabledByRelationship(rel) && currentState == rel.invertRelationship)
                         {
-                            State[selectable.name][selectable.name] = !rel.invertRelationship;
+                            foreach (var sel in selectable.selectableItems)
+                                State[selectable.name][sel.name] = !rel.invertRelationship;
                             if (!changedGroups.Contains(selectable.name)) changedGroups.Add(selectable.name);
                         }
                     }
@@ -940,17 +994,43 @@ namespace StarshipExpansionProject.Modules
                 }
             }
         }
-        public void ProcessTransformState(Dictionary<string, List<SelectableItem>> pSelectables = null)
+        public void ProcessTransformState(Dictionary<string, List<SelectableItem>> pSelectables = null, bool? pOverrideState = null)
         {
             if (pSelectables == null)
             {
-                // This is init or engine switch, update everything, including disabled types
+                ProcessTransformState(pSelectables: ActiveSelectableItemsDict[activeEngineType]);
+                ProcessTransformState(pSelectables: InactiveSelectableItemsDict[activeEngineType], pOverrideState: false);
             }
             else
             {
-                // This means some button event happened and we need to change just the received ones.
+                foreach (var kvp in pSelectables)
+                {
+                    foreach (var selectable in kvp.Value)
+                    {
+                        bool state = State[kvp.Key][selectable.name];
+                        bool transformState = pOverrideState ?? (selectable.invertTransformState ? !state : state);
+                        foreach (var t in TransformsDict[selectable.name])
+                        {
+                            t.gameObject.SetActive(transformState);
+                        }
+                        if (!string.IsNullOrWhiteSpace(selectable.nodeId) && AttachedNodesDict.ContainsKey(selectable.nodeId))
+                        {
+                            bool nodeState = pOverrideState ?? (selectable.invertNodeState ? !state : state);
+                            AttachNode node = AttachedNodesDict[selectable.nodeId];
+                            if (nodeState)
+                            {
+                                node.nodeType = AttachNode.NodeType.Stack;
+                                node.radius = 0.4f;
+                            }
+                            else
+                            {
+                                node.nodeType = AttachNode.NodeType.Dock;
+                                node.radius = 1f / 1000f;
+                            }
+                        }
+                    }
+                }
             }
-            Debug.Log("Mock transform change");
         }
         public void ProcessMassState()
         {
