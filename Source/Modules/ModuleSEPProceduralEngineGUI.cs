@@ -7,7 +7,6 @@ using StarshipExpansionProject.Utils.DataTypes;
 using KSP.Localization;
 // TODO: Remove unused items from State dict, probably in OnLoad? 
 //       Throw error if State dict already contains a key at load time
-//       Symmetry
 //       Update Thrust
 
 namespace StarshipExpansionProject.Modules
@@ -409,6 +408,12 @@ namespace StarshipExpansionProject.Modules
             ProcessTransformState();
             ProcessMassState();
             ProcessThrustState();
+            GameEvents.onEditorSymmetryModeChange.Add(SetSymmetryState);
+        }
+
+        public void OnDestroy()
+        {
+            GameEvents.onEditorSymmetryModeChange.Remove(SetSymmetryState);
         }
 
         public float GetModuleMass(float baseMass, ModifierStagingSituation situation)
@@ -1102,6 +1107,10 @@ namespace StarshipExpansionProject.Modules
             var tmpNode = new ConfigNode(nameof(State));
             ((ModuleSEPProceduralEngineGUI) prefab.Modules.GetModule(moduleName)).State.Save(tmpNode);
             State.Load(tmpNode);
+        }
+        public void SetSymmetryState(int pSymmetryMode)
+        {
+            if (part.stackSymmetry != pSymmetryMode) part.stackSymmetry = pSymmetryMode;
         }
         #endregion
     }
