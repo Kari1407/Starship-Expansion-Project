@@ -8,13 +8,12 @@ using KSP.Localization;
 // TODO: Remove unused items from State dict, probably in OnLoad? 
 //       Throw error if State dict already contains a key at load time
 //       Symmetry
-//       Update Mass
 //       Update Thrust
 
 namespace StarshipExpansionProject.Modules
 {
     // Part Module
-    public class ModuleSEPProceduralEngineGUI : PartModule
+    public class ModuleSEPProceduralEngineGUI : PartModule, IPartMassModifier
     {
         #region Static strings
         // Static strings
@@ -38,6 +37,9 @@ namespace StarshipExpansionProject.Modules
 
         [SerializeField]
         public List<Transform> transforms;
+
+        [SerializeField]
+        private float Mass;
         #endregion
 
         #region KSP Fields
@@ -386,11 +388,12 @@ namespace StarshipExpansionProject.Modules
                 }
             }
 
-            if (!isInitialise)
+            if (isInitialise)
             {
                 ProcessRelationships(out _);
                 ProcessMassState();
                 ProcessThrustState();
+                if (HighLogic.LoadedScene == GameScenes.LOADING) part.UpdateMass();
             }
         }
 
@@ -407,6 +410,12 @@ namespace StarshipExpansionProject.Modules
             ProcessMassState();
             ProcessThrustState();
         }
+
+        public float GetModuleMass(float baseMass, ModifierStagingSituation situation)
+        {
+            return Mass;
+        }
+        public ModifierChangeWhen GetModuleMassChangeWhen() => ModifierChangeWhen.FIXED;
         #endregion
 
         #region Custom Methods
@@ -1034,7 +1043,25 @@ namespace StarshipExpansionProject.Modules
         }
         public void ProcessMassState()
         {
-            Debug.Log("Mock mass change");
+            float tmpMass = 0f;
+            if (ActiveSelectableItemsDict.TryGetValue(activeEngineType, out var items))
+            {
+                foreach (var kvp in items)
+                {
+                    if (State.TryGetValue(kvp.Key, out var state))
+                    {
+                        foreach (var selectable in kvp.Value)
+                        {
+                            if (state.TryGetValue(selectable.name, out var isActive) && isActive)
+                            {
+                                tmpMass += selectable.mass;
+                            }
+                        }
+                    }
+                }
+            }
+            Mass = tmpMass;
+            if (HighLogic.LoadedSceneIsEditor) GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
         }
 
         public void ProcessThrustState(string pEngineSet = null)
