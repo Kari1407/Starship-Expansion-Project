@@ -11,7 +11,7 @@ namespace ModuleVaporCone
 
         [KSPField] public string waterfallEffectController = "thrust";
 
-        [KSPField] public string transform;
+        [KSPField] public string vaporTransform;
 
         [KSPField] public string engineID = "SEPVaporEngine";
 
@@ -30,7 +30,7 @@ namespace ModuleVaporCone
             // Find engine module and set variable
             foreach (ModuleEnginesFX moduleEnginesFx in part.FindModulesImplementing<ModuleEnginesFX>())
             {
-                if (moduleEnginesFx.thrustVectorTransformName.Equals(transform))
+                if (moduleEnginesFx.thrustVectorTransformName.Equals(vaporTransform))
                 {
                     Debug.Log($"[{MODULENAME}] Found Vapor Cone EngineFX");
 
@@ -49,7 +49,7 @@ namespace ModuleVaporCone
             // Find engine module and set variable OnLoad to ensure they are stored
             foreach (ModuleEnginesFX moduleEnginesFx in part.FindModulesImplementing<ModuleEnginesFX>())
             {
-                if (moduleEnginesFx.thrustVectorTransformName.Equals(transform))
+                if (moduleEnginesFx.thrustVectorTransformName.Equals(vaporTransform))
                 {
                     Debug.Log($"[{MODULENAME}] Found Vapor Cone EngineFX");
 

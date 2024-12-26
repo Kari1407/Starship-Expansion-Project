@@ -80,7 +80,6 @@ namespace StarshipExpansionProject.Modules
         #region Private UI Fields
         // Private UI Fields
         private Rect windowRect = new Rect(275, 200, 250, 374);
-        private bool isDragging = false;
         private bool isVisible = false;
         private Vector2 customSelectablesScrollPosition = Vector2.zero;
         private string uiName = Localizer.GetStringByTag("#LOC_SEP_GUILabelName");

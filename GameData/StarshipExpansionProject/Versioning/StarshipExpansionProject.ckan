@@ -23,4 +23,4 @@ supports:
   - name: NeptuneCamera
 conflicts:
   - name: StarshipExpansionProjectIVA
-    max_version: v.3.0.0-b2
+    max_version: v.3.0.0-b1
