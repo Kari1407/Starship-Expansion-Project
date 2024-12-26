@@ -4,6 +4,7 @@ depends:
   - name: Waterfall
   - name: KSPCommunityPartModules
   - name: KSPCommunityFixes
+  - name: Harmony2
 recommends:
   - name: StarshipExpansionProjectIVA
   - name: StarshipLaunchExpansion
