@@ -7,7 +7,7 @@ using StarshipExpansionProject.Utils.DataTypes;
 using KSP.Localization;
 // TODO: Remove unused items from State dict, probably in OnLoad? 
 //       Throw error if State dict already contains a key at load time
-//       Update Thrust
+//       Known issue: OnLoad throws on Load due to stock code UpdateMass. Harmless but not nice.
 
 namespace StarshipExpansionProject.Modules
 {
@@ -66,6 +66,9 @@ namespace StarshipExpansionProject.Modules
                 return (KeyCode) _modifierKey;
             }
         }
+
+        [KSPField]
+        public bool usingEngineSwitch = true;
 
         [KSPEvent(guiActive = false, guiActiveEditor = true, guiActiveUnfocused = false, guiName = "#LOC_SEP_SelectEnginesGUIName")]
         public void OpenGui()
@@ -155,17 +158,17 @@ namespace StarshipExpansionProject.Modules
             }
         }
 
-        private Dictionary<int, List<EngineSet>> _engineSetDict;
-        private Dictionary<int, List<EngineSet>> EngineSetDict
+        private Dictionary<int, Dictionary<string, EngineSet>> _engineSetDict;
+        private Dictionary<int, Dictionary<string, EngineSet>> EngineSetDict
         {
             get
             {
                 if (_engineSetDict == null)
                 {
-                    _engineSetDict = new Dictionary<int, List<EngineSet>>();
+                    _engineSetDict = new Dictionary<int, Dictionary<string, EngineSet>>();
                     for (int i = 0; i < engineTypes.Count; i++)
                     {
-                        _engineSetDict.Add(i, engineSets.Where(s => engineTypes[i].EngineSetNames.Contains(s.name)).ToList());
+                        _engineSetDict.Add(i, engineSets.Where(s => engineTypes[i].EngineSetNames.Contains(s.name)).ToDictionary(s => s.name, s => s));
                     }
                 }
                 return _engineSetDict;
@@ -231,9 +234,9 @@ namespace StarshipExpansionProject.Modules
                     _relationshipsDict = new Dictionary<int, Dictionary<string, Dictionary<RelationshipType, bool>>>();
                     for (int i = 0; i < engineTypes.Count(); i++)
                     {
-                        for (int j = 0; j < EngineSetDict[i].Count; j++)
+                        foreach (string Key in EngineSetDict[i].Keys)
                         {
-                            SetRelationshipState(EngineSetDict[i][j].name, pEngineType: i);
+                            SetRelationshipState(Key, pEngineType: i);
                         }
                         for (int j = 0; j < CustomSelectablesDict[i].Count; j++)
                         {
@@ -284,9 +287,9 @@ namespace StarshipExpansionProject.Modules
                     for (int i = 0; i < engineTypes.Count; i++)
                     {
                         var tmpDict = new Dictionary<string, List<SelectableItem>>();
-                        foreach (var set in EngineSetDict[i])
+                        foreach (var kvp in EngineSetDict[i])
                         {
-                            tmpDict.Add(set.name, set.selectableItems);
+                            tmpDict.Add(kvp.Key, kvp.Value.selectableItems);
                         }
                         foreach (var selectable in CustomSelectablesDict[i])
                         {
@@ -312,7 +315,7 @@ namespace StarshipExpansionProject.Modules
                         var tmpDict = new Dictionary<string, List<SelectableItem>>();
                         foreach (var set in engineSets)
                         {
-                            if (EngineSetDict[i].Contains(set)) continue;
+                            if (EngineSetDict[i].ContainsKey(set.name)) continue;
                             tmpDict.Add(set.name, set.selectableItems);
                         }
                         foreach (var selectable in customSelectables)
@@ -335,6 +338,58 @@ namespace StarshipExpansionProject.Modules
                 if (_attachedNodesDict == null)
                     _attachedNodesDict = part.attachNodes.ToDictionary(item => item.id, item => item);
                 return _attachedNodesDict;
+            }
+        }
+
+        private Dictionary<string, ModuleEngines> _engineModulesDict;
+        private Dictionary<string, ModuleEngines> EngineModulesDict
+        {
+            get
+            {
+                if (_engineModulesDict == null)
+                {
+                    var modules = part.FindModulesImplementing<ModuleEngines>();
+                    var engineIds = engineSets.Select(es => es.engineId);
+                    _engineModulesDict = modules.Where(m => engineIds.Contains(m.engineID)).ToDictionary(m => m.engineID, m => m);
+                }
+                return _engineModulesDict;
+            }
+        }
+
+        private Dictionary<int, Dictionary<string, List<EngineSet>>> _activeEngineModulesDict;
+        private Dictionary<int, Dictionary<string, List<EngineSet>>> ActiveEngineModulesDict
+        {
+            get
+            {
+                if (_activeEngineModulesDict == null)
+                {
+                    _activeEngineModulesDict = new Dictionary<int, Dictionary<string, List<EngineSet>>>();
+                    for (int i = 0; i < engineTypes.Count; i++)
+                    {
+                        _activeEngineModulesDict.Add(i, new Dictionary<string, List<EngineSet>>());
+
+                        foreach (var kvp in EngineSetDict[i])
+                        {
+                            if (!_activeEngineModulesDict[i].ContainsKey(kvp.Value.engineId))
+                                _activeEngineModulesDict[i][kvp.Value.engineId] = new List<EngineSet> { kvp.Value };
+                            else _activeEngineModulesDict[i][kvp.Value.engineId].Add(kvp.Value);
+                        }
+                    }
+                }
+                return _activeEngineModulesDict;
+            }
+        }
+
+        private ModuleSEPEngineSwitch _engineSwitch;
+        private ModuleSEPEngineSwitch EngineSwitch
+        {
+            get
+            {
+                if (_engineSwitch == null)
+                {
+                    _engineSwitch = part.FindModuleImplementingFast<ModuleSEPEngineSwitch>();
+                }
+                return _engineSwitch;
             }
         }
         #endregion
@@ -362,6 +417,7 @@ namespace StarshipExpansionProject.Modules
                 _activeSelectableItemsDict = null;
                 _inactiveSelectableItemsDict = null;
                 _attachedNodesDict = null;
+                _activeEngineModulesDict = null;
 
                 _uiScale = null;
             }
@@ -823,7 +879,7 @@ namespace StarshipExpansionProject.Modules
             GUILayout.EndVertical();
 
             Rect canvasRect = GUILayoutUtility.GetLastRect();
-            foreach (var set in EngineSetDict[activeEngineType])
+            foreach (var set in EngineSetDict[activeEngineType].Values)
             {
                 for (int i = 0; i < set.selectableItems.Count; i++)
                 {
@@ -904,9 +960,9 @@ namespace StarshipExpansionProject.Modules
         public void UpdateActiveEngineType(int dir)
         {
             activeEngineType = (activeEngineType + dir + engineTypes.Count) % engineTypes.Count;
-            foreach (var set in EngineSetDict[activeEngineType])
+            foreach (var Key in EngineSetDict[activeEngineType].Keys)
             {
-                SetRelationshipState(set.name);
+                SetRelationshipState(Key);
             }
             foreach (var selectable in CustomSelectablesDict[activeEngineType])
             {
@@ -952,7 +1008,7 @@ namespace StarshipExpansionProject.Modules
             }
 
             ProcessCommonEvent(pGroupName: pEngineSet.name);
-            ProcessThrustState(pEngineSet: pEngineSet.name);
+            ProcessThrustState(pEngineId: pEngineSet.engineId);
         }
         public void ProcessCommonEvent(string pGroupName)
         {
@@ -1068,18 +1124,55 @@ namespace StarshipExpansionProject.Modules
             Mass = tmpMass;
             if (HighLogic.LoadedSceneIsEditor) GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
         }
-
-        public void ProcessThrustState(string pEngineSet = null)
+        public void ProcessThrustState(string pEngineId = null)
         {
-            if (string.IsNullOrWhiteSpace(pEngineSet))
-            {
-                // Process all sets
-            }
+            var engineIds = new List<string>();
+            if (string.IsNullOrWhiteSpace(pEngineId))
+                engineIds.AddRange(EngineModulesDict.Keys);
             else
+                engineIds.Add(pEngineId);
+
+            foreach (var engineId in engineIds)
             {
-                // process this set specifically
+                var engineModule = EngineModulesDict[engineId];
+                var thrustTuple = (minThrust: 0f, maxThrust: 0f);
+                if (ActiveEngineModulesDict[activeEngineType].ContainsKey(engineId))
+                    foreach (var set in ActiveEngineModulesDict[activeEngineType][engineId])
+                    {
+                        int setEngineCount = set.selectableItems
+                                            .Count(selectable => State.TryGetValue(set.name, out var state)
+                                                && state.TryGetValue(selectable.name, out var isEnabled)
+                                                && isEnabled);
+
+                        thrustTuple.minThrust += setEngineCount * set.singleEngineMinThrust;
+                        thrustTuple.maxThrust += setEngineCount * set.singleEngineThrust;
+                    }
+
+                float isp0 = engineModule.atmosphereCurve.Evaluate(0f);
+                engineModule.maxThrust = thrustTuple.maxThrust;
+                engineModule.minThrust = thrustTuple.minThrust;
+                engineModule.maxFuelFlow = thrustTuple.maxThrust / isp0 / engineModule.g;
+                engineModule.minFuelFlow = thrustTuple.minThrust / isp0 / engineModule.g;
+
+                var hasThrust = thrustTuple.maxThrust > 0;
+                if (!usingEngineSwitch && engineModule.isEnabled != hasThrust)
+                {
+                    engineModule.isEnabled = hasThrust;
+                    engineModule.SetStagingState(hasThrust);
+                }
             }
-            Debug.Log("Mock thrust change");
+
+            if (usingEngineSwitch)
+            {
+                bool anyThrust = EngineSwitch.engines.Sum(en => en.maxThrust) > 0;
+                if (EngineSwitch.isEnabled != anyThrust)
+                {
+                    for (int i = 0; i < EngineSwitch.engines.Count; i++)
+                        EngineSwitch.engines[i].SetStagingState(anyThrust);
+                    EngineSwitch.isEnabled = anyThrust;
+                    EngineSwitch.SetStagingState(anyThrust);
+                }
+            }
         }
         public bool IsDisabledByRelationship(Relationship pRelationship)
         {
