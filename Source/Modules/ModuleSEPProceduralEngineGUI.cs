@@ -514,8 +514,16 @@ namespace StarshipExpansionProject.Modules
                 foreach (var tmpNode in node.GetNodes("ITEM"))
                 {
                     var tmpItem = ScriptableObject.CreateInstance<SelectableItem>();
+                    if (tmpNode.HasValue(nameof(tmpItem.name)))
+                        tmpItem.name = tmpNode.GetValue(nameof(tmpItem.name));
+                    else vml.Add((VmlSeverity.Information, $"{CustomSelectableNodeName} \"{tmpItem.name}\" has no value {nameof(tmpItem.name)} using transformName"));
+
                     if (tmpNode.HasValue("transformName"))
-                        tmpItem.name = tmpNode.GetValue("transformName");
+                    {
+                        tmpItem.transformName = tmpNode.GetValue("transformName");
+                        if (string.IsNullOrEmpty(tmpItem.name)) tmpItem.name = tmpItem.transformName;
+                    }
+                    
                     else vml.Add((VmlSeverity.Error, $"{CustomSelectableNodeName} \"{tmpItem.name}\" has no value transformName"));
 
                     if (tmpNode.HasValue(nameof(tmpItem.invertTransformState)))
@@ -541,7 +549,7 @@ namespace StarshipExpansionProject.Modules
 
                     if (tmpItem.name == string.Empty) continue;
 
-                    var tmpTransforms = part.FindModelTransforms(tmpItem.name);
+                    var tmpTransforms = part.FindModelTransforms(tmpItem.transformName);
                     Transform tmpNodeTransform = null;
                     if (tmpItem.nodeId != null && tmpItem.nodeId != string.Empty)
                         tmpNodeTransform = part.FindModelTransform(tmpItem.nodeId);
@@ -1240,6 +1248,7 @@ namespace StarshipExpansionProject.Modules
     [Serializable]
     public class SelectableItem : ScriptableObject
     {
+        public string transformName;
         public float mass = 0f;
         public string nodeId;
         public List<int> transformIndexes = new List<int>();
