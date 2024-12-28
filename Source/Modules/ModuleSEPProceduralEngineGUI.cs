@@ -71,6 +71,7 @@ namespace StarshipExpansionProject.Modules
         public bool usingEngineSwitch = true;
 
         [KSPEvent(guiActive = false, guiActiveEditor = true, guiActiveUnfocused = false, guiName = "#LOC_SEP_SelectEnginesGUIName")]
+        [KSPEvent(guiActive = true, guiActiveEditor = true, guiActiveUnfocused = false, guiName = "#LOC_SEP_SelectEnginesGUIName")]
         public void OpenGui()
         {
             isVisible = true;
@@ -447,7 +448,8 @@ namespace StarshipExpansionProject.Modules
                 ProcessRelationships(out _);
                 ProcessMassState();
                 ProcessThrustState();
-                if (HighLogic.LoadedScene == GameScenes.LOADING) part.UpdateMass();
+                //if (HighLogic.LoadedScene == GameScenes.LOADING) part.UpdateMass();
+                if (HighLogic.LoadedScene == GameScenes.LOADING) part.mass = Mass;
             }
         }
 
@@ -1103,7 +1105,7 @@ namespace StarshipExpansionProject.Modules
         }
         public void ProcessMassState()
         {
-            float tmpMass = 0f;
+            float tmpMass = -part.prefabMass;
             if (ActiveSelectableItemsDict.TryGetValue(activeEngineType, out var items))
             {
                 foreach (var kvp in items)
