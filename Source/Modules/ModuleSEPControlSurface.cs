@@ -212,8 +212,20 @@ namespace StarshipExpansionProject
         /// Defines the percentage of how much of the part is the control surface
         /// Valid values ranging from 0 to 1
         /// </summary>
+        //[KSPField]
+        //public float ctrlSurfaceArea = 1f;
+
+         /// <summary>
+        /// Defines the multiplier of the lift force, useful for tweaking specific behaviours
+        /// </summary>
         [KSPField]
-        public float ctrlSurfaceArea = 1f;
+        public float liftMultiplier = 1f;
+
+         /// <summary>
+        /// Defines the multiplier of the drag force, useful for tweaking specific behaviours
+        /// </summary>
+        [KSPField]
+        public float dragMultiplier = 1f;
         
         /// <summary>
         /// Defines a deadband, a treshold - where below the value, the actuation will not be applied to the wings
@@ -304,8 +316,8 @@ namespace StarshipExpansionProject
                 SetupCoefficients(pointVelocity, out Vector3 nVel, out Vector3 liftVector, out float liftDot, out float absDot);
 
                 baseLiftForce = GetLiftVector(liftVector, liftDot, absDot, Qlift, (float)part.machNumber);
-                Vector3 liftForce = GetLiftVector(liftVector, liftDot, absDot, Qlift, (float)part.machNumber) * ctrlSurfaceArea;
-                Vector3 dragForce = GetDragVector(nVel, absDot, Qdrag) * ctrlSurfaceArea;
+                Vector3 liftForce = GetLiftVector(liftVector, liftDot, absDot, Qlift, (float)part.machNumber) * liftMultiplier;
+                Vector3 dragForce = GetDragVector(nVel, absDot, Qdrag) * dragMultiplier;
 
                 if (ctrlSurface != null)
                 {
@@ -321,8 +333,8 @@ namespace StarshipExpansionProject
                     absDot = Mathf.Abs(liftDot);
                 }
 
-                liftForce += GetLiftVector(liftVector, liftDot, absDot, Qlift, (float)part.machNumber) * ctrlSurfaceArea;
-                dragForce += GetDragVector(nVel, absDot, Qdrag, (float)part.machNumber) * ctrlSurfaceArea;
+                liftForce += GetLiftVector(liftVector, liftDot, absDot, Qlift, (float)part.machNumber) * liftMultiplier;
+                dragForce += GetDragVector(nVel, absDot, Qdrag, (float)part.machNumber) * dragMultiplier;
                 
                 part.AddForceAtPosition(liftForce /* (1.0f - (deflection / (1.5f * ctrlSurfaceRange.y)))*/, part.partTransform.TransformPoint(part.CoLOffset));
                 part.AddForceAtPosition(dragForce, part.partTransform.TransformPoint(part.CoPOffset));
@@ -435,9 +447,9 @@ namespace StarshipExpansionProject
         /// <returns></returns>
         public Vector3 GetLiftFromDeflection(Vector3 deflection)
         {
-            Vector3 liftForce = baseLiftForce * ctrlSurfaceArea;
+            Vector3 liftForce = baseLiftForce * liftMultiplier;
             float dot = Vector3.Dot(nVel, deflection);
-            return GetLiftVector(deflection, dot, Mathf.Abs(dot), Qlift, (float)part.machNumber) * ctrlSurfaceArea - liftForce;
+            return GetLiftVector(deflection, dot, Mathf.Abs(dot), Qlift, (float)part.machNumber) * liftMultiplier - liftForce;
         }
 
         /// <summary>
