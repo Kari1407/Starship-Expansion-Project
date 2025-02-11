@@ -2,6 +2,7 @@ depends:
   - name: ModuleManager
   - name: B9PartSwitch
   - name: StarshipExpansionProject
+    min_version: v.3.0.0-b2
   - name: NearFutureProps
   - name: Reviva
   - name: FreeIva

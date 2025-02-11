@@ -3,6 +3,8 @@ depends:
   - name: B9PartSwitch
   - name: Waterfall
   - name: KSPCommunityPartModules
+  - name: KSPCommunityFixes
+  - name: Harmony2
 recommends:
   - name: StarshipExpansionProjectIVA
   - name: StarshipLaunchExpansion
@@ -19,3 +21,6 @@ suggests:
 supports:
   - name: HullcamVDSContinued
   - name: NeptuneCamera
+conflicts:
+  - name: StarshipExpansionProjectIVA
+    max_version: v.3.0.0-b1
