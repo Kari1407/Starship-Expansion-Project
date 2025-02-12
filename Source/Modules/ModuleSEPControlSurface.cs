@@ -447,9 +447,9 @@ namespace StarshipExpansionProject
         /// <returns></returns>
         public Vector3 GetLiftFromDeflection(Vector3 deflection)
         {
-            Vector3 liftForce = baseLiftForce * liftMultiplier;
+            Vector3 liftForce = baseLiftForce * dragMultiplier;
             float dot = Vector3.Dot(nVel, deflection);
-            return GetLiftVector(deflection, dot, Mathf.Abs(dot), Qlift, (float)part.machNumber) * liftMultiplier - liftForce;
+            return GetLiftVector(deflection, dot, Mathf.Abs(dot), Qlift, (float)part.machNumber) * dragMultiplier - liftForce;
         }
 
         /// <summary>
