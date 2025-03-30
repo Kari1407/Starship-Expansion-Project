@@ -10,6 +10,7 @@ Starship Expansion Project (SEP) is a mod being developed by me, Kari, and our a
 - ModuleManager
 - KSPCommunityPartModules
 - KSPCommunityFixes
+- Harmony 2
 
 ### Soft Dependencies:
 - Community Resource Pack
