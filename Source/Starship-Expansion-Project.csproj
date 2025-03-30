@@ -52,15 +52,26 @@
       <Private>False</Private>
       <CKANIdentifier>B9PartSwitch</CKANIdentifier>
     </Reference>
+    <Reference Include="$(KSPRoot)/GameData/KSPCommunityFixes/Plugins/KSPCommunityFixes.dll">
+      <Private>False</Private>
+      <CKANIdentifier>KSPCommunityFixes</CKANIdentifier>
+    </Reference>
+    <Reference Include="$(KSPRoot)/GameData/000_Harmony/0Harmony.dll">
+      <Private>False</Private>
+      <CKANIdentifier>Harmony2</CKANIdentifier>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Modules\ModuleSEPEngineSwitch.cs" />
+    <Compile Include="Modules\ModuleSEPProceduralEngineGUI.cs" />
     <Compile Include="Modules\ModuleSEPVaporCone.cs" />
     <Compile Include="Modules\ModuleSEPPartSwitchAction.cs" />
-    <Compile Include="Modules\ModuleSEPEngineGUI.cs" />
     <Compile Include="Modules\ModuleSEPControlSurface.cs" />
     <Compile Include="Modules\ModuleSEPRaptor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\DataTypes\CollectionHelpers.cs" />
+    <Compile Include="Utils\DataTypes\DictionaryHelper.cs" />
+    <Compile Include="Utils\DataTypes\PersistentDictionary.cs" />
     <Compile Include="Utils\Vector3Renderer.cs" />
     <Compile Include="Utils\Vector3Utils.cs" />
   </ItemGroup>
@@ -68,7 +79,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-	  <Publicize Include="Assembly-CSharp:ModuleEngines.independentThrottlePercentField"/>
+    <Publicize Include="Assembly-CSharp:ModuleEngines.independentThrottlePercentField" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

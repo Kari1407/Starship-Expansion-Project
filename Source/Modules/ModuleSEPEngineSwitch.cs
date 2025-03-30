@@ -12,21 +12,13 @@ namespace StarshipExpansionProject.Modules
 	public class ModuleSEPEngineSwitch : PartModule, IEngineStatus
 	{
 		public const string MODULENAME = "ModuleSEPEngineSwitch";
+        public const string EngineIDNodeName = "EngineID";
 
-		[KSPField(guiName = "Mode", isPersistant = true, guiActive = true, guiActiveEditor = true)]
+        [KSPField(guiName = "Mode", isPersistant = true, guiActive = true, guiActiveEditor = true)]
 		public string currentEngineDisplay;
 
 		[KSPField(isPersistant = true)]
 		public int selectedIndex = 0;
-
-		[KSPField]
-		public string primaryEngineID;
-
-		[KSPField]
-		public string secondaryEngineID;
-
-		[KSPField]
-		public string tertiaryEngineID;
 
 		[KSPField]
 		public string WaterfallControllerName = "EngineMode";
@@ -92,10 +84,12 @@ namespace StarshipExpansionProject.Modules
 		[KSPAction(guiName = "#autoLOC_6005052")]
 		public void ToggleIndependentThrottleAction(KSPActionParam param) => ToggleIndependentThrottle(param);
 
-		private List<ModuleEnginesFX> activeEngines;
-		private List<ModuleEnginesFX> oldEngines;
-		private List<ModuleEnginesFX> engines = new List<ModuleEnginesFX>();
+		private List<ModuleEngines> activeEngines;
+		private List<ModuleEngines> oldEngines;
+		public List<ModuleEngines> engines = new List<ModuleEngines>();
 		private UI_FloatRange independentThrottlePercentField;
+		[SerializeField]
+		private List<string> engineIDs = new List<string>();
 
 		private WaterfallController waterfallController
 		{
@@ -124,8 +118,7 @@ namespace StarshipExpansionProject.Modules
 
 			base.OnStart(state);
 
-			List<string> engineIDs = new List<string> { primaryEngineID, secondaryEngineID, tertiaryEngineID };
-			for (int i = 0; i < 3; i++)
+			for (int i = 0; i < engineIDs.Count; i++)
 			{
 				ModuleEnginesFX moduleEnginesFX = part.Modules.GetModules<ModuleEnginesFX>()
 															  .Where(eng => eng.engineID == engineIDs[i])
@@ -180,7 +173,16 @@ namespace StarshipExpansionProject.Modules
 			Fields["thrustPercentage"].OnValueModified += thrustValueChanged;
 		}
 
-		public override void OnActive()
+        public override void OnLoad(ConfigNode node)
+        {
+            base.OnLoad(node);
+			if (node.HasValue(EngineIDNodeName))
+			{
+				engineIDs = node.GetValuesList(EngineIDNodeName);
+			}
+        }
+
+        public override void OnActive()
 		{
 			StartCoroutine(DisableFields());
 			Events["ActivateEngineEvent"].guiActive = false;
@@ -269,7 +271,7 @@ namespace StarshipExpansionProject.Modules
 		{
 			int newIndex = selectedIndex + 1;
 
-			if (newIndex >= 3)
+			if (newIndex >= engines.Count)
 				newIndex = 0;
 
 			SetActiveEngine(newIndex);
@@ -280,7 +282,7 @@ namespace StarshipExpansionProject.Modules
 			int newIndex = selectedIndex - 1;
 
 			if (newIndex < 0)
-				newIndex = 2;
+				newIndex = engines.Count - 1;
 
 			SetActiveEngine(newIndex);
 		}
@@ -289,8 +291,8 @@ namespace StarshipExpansionProject.Modules
 		{
 			oldEngines = activeEngines;
 			
-			activeEngines = new List<ModuleEnginesFX>();
-			for (int i = index; i < 3; i++) activeEngines.Add(engines[i]);
+			activeEngines = new List<ModuleEngines>();
+			for (int i = index; i < engines.Count; i++) activeEngines.Add(engines[i]);
 
 			activeEngines.ForEach(en => en.manuallyOverridden = false);
 			//activeEngines.ForEach(en => en.isEnabled = true);
