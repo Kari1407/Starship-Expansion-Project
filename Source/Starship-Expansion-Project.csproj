@@ -38,7 +38,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="KSPBuildTools" Version="0.0.2-alpha.7" />
+    <PackageReference Include="KSPBuildTools" Version="0.0.4" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="HOW_TO_BUILD.txt" />
