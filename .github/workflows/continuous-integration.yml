@@ -13,7 +13,7 @@ on:
 
 jobs:
   build:
-    uses: KSPModdingLibs/KSPBuildTools/.github/workflows/build.yml@main
+    uses: KSPModdingLibs/KSPBuildTools/.github/workflows/build.yml@0.0.4
     with:
       solution-file-path: 'Source/Starship-Expansion-Project.sln'
       use-ckan: true

@@ -9,7 +9,7 @@ on:
 
 jobs:
   internal-create-release:
-    uses: KSPModdingLibs/KSPBuildTools/.github/workflows/create-release.yml@main
+    uses: KSPModdingLibs/KSPBuildTools/.github/workflows/create-release.yml@0.0.4
     with:
       solution-file-path: 'Source/Starship-Expansion-Project.sln'
       use-ckan: true
