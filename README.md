@@ -19,6 +19,7 @@ Starship Expansion Project (SEP) is a mod being developed by me, Kari, and our a
 - Starship Launch Expansion
 
 ### Recommended Mods:
+- FlyByWire SAS Mode (Seriously this is going to make your life 1000x easier)
 - Textures Unlimited (Shiny but for Older parts)
 - Editor Extensions Redux
 - Flight Manager for Reusable Stages (FMRS)
@@ -26,14 +27,7 @@ Starship Expansion Project (SEP) is a mod being developed by me, Kari, and our a
 - HullCameraVDS & NeptuneCamera
 - Hangar Extender
 - MechJeb 2
-- FlyByWire SAS Mode
 
-### IVA Dependencies
-- Near Future Props
-- Reviva
-- Free IVA
-- Raster Prop Monitor
-- ASET Props
 
 ## Roadmap
 You can check my roadmap on https://trello.com/b/UPblvcar/karis-roadmap
@@ -48,7 +42,6 @@ https://discord.gg/CQzk9H84pr
 
 ## LICENSE
 All configs are distributed under CC-NC-SA-4.0 license. 
-Nertea's HabUtils.dll is distributed under MIT license. 
 All assets (all .dds, .png and .mu files) alongside with our StarshipExpansionProject.dll are distributed under an All Rights Reserved license. 
 
-You may not redistribute or re-use these assets without express permission from the author. Updated on November 30th, 2024
+You may not redistribute or re-use these assets without express permission from the author. Updated on December 14th, 2025
