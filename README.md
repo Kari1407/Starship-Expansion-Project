@@ -12,22 +12,18 @@ Starship Expansion Project (SEP) is a mod being developed by me, Kari, and our a
 - KSPCommunityFixes
 - Harmony 2
 
-### Soft Dependencies:
-- Community Resource Pack
-- Shabby 0.4.0 or later + Resurfaced (Shiny)
+### Recommended Mods:
+- Community Resource Pack (Mod is balanced around Methalox)
+- Shabby 0.4.0 or later + Resurfaced (Mod is itended with PBR materials)
 - Kerbal Joint Reinforcement Continued
 - Starship Launch Expansion
-
-### Recommended Mods:
-- FlyByWire SAS Mode (Seriously this is going to make your life 1000x easier)
-- Textures Unlimited (Shiny but for Older parts)
+- FlyByWire SAS Mode
+- MechJeb 2
 - Editor Extensions Redux
 - Flight Manager for Reusable Stages (FMRS)
 - Trajectories
 - HullCameraVDS & NeptuneCamera
 - Hangar Extender
-- MechJeb 2
-
 
 ## Roadmap
 You can check my roadmap on https://trello.com/b/UPblvcar/karis-roadmap
@@ -37,8 +33,9 @@ I also have a discord server, enter for updates, dev talk or to have fun
 https://discord.gg/CQzk9H84pr
 
 ## Know Issues
-- When you spawn a part in the VAB it may have invisible meshes, just click it again and will fix itself
-- If SEP parts are black, you need to bump up KSP graphical settings, specifically render quality and/or reflection related settings
+- Grid Fins can cause big roll oscillations if actuating with the engines, make sure to disable them on ignition
+- If you're experiencing wobbly grid fins, reduce the authority limiter (inconsistent)
+- Stock staging readings reads only part of cluster thrust data. Use KER or MJ instead
 
 ## LICENSE
 All configs are distributed under CC-NC-SA-4.0 license. 
