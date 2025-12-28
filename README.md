@@ -32,7 +32,7 @@ You can check my roadmap on https://trello.com/b/UPblvcar/karis-roadmap
 I also have a discord server, enter for updates, dev talk or to have fun 
 https://discord.gg/CQzk9H84pr
 
-## Know Issues
+## Known Issues
 - Grid Fins can cause big roll oscillations if actuating with the engines, make sure to disable them on ignition
 - If you're experiencing wobbly grid fins, reduce the authority limiter (inconsistent)
 - Stock staging readings reads only part of cluster thrust data. Use KER or MJ instead
