@@ -2,24 +2,31 @@ All thanks to Sofie, Isaquest, Janus92, Kochi, Sam, Sputnik, goob and every sing
 Special gratitude to Damon for mantaining and improving TundraExploration, the mod that started this all.
 
 LICENSE
-All configs are distributed under CC-NC-SA-4.0 license. Nertea's HabUtils.dll is distributed under MIT license. All assets (all .dds, .png and .mu files) alongside with our StarshipExpansionProject.dll are distributed under an All Rights Reserved license. You may not redistribute or re-use these assets without express permission from the author. Updated on February 25th, 2023
+All configs are distributed under CC-NC-SA-4.0 license. All assets (all .dds, .png and .mu files) alongside with our StarshipExpansionProject.dll are distributed under an All Rights Reserved license. You may not redistribute or re-use these assets without express permission from the author. Updated on December 14th, 2025
 
-Version 3.0.0
-- MK-3 Initial Release
-- Updated RO patches by Anomalia
-- Fix skirt not shielding engines from aero
-- Fix booster drag cubes
-- Plume updated by Rhea
-- New raptor sounds
-- Fixed RCS on depot and Expendable
-- Allowed Raptors to be surface attachable
-- Fix missing _AOMap on parts that support it (TU)
-- Fixed Vents having exhaust damage
-- Fixed MK2 flap description
-- Updated MK2 to match MK3
-- Moved to Resurfaced over TU
-- Increased Gimbal Range on Raptor to help with heavier Ship
-
+Version 3.0.0 FR
+- Added KSPCommunityPartModules, KSPCommunityFixes and Harmony 2 as dependencies
+- Removed TundraExploration as a soft dependency
+- Revamped cluster engine selection module
+- Revamped how Flap forces are calculated (Drag in favor of Lift - Better and easier to control)
+- Migrated from TU to Resurfaced
+- Deprecate MK-1 Ship and Booster parts
+- Added Block 1 Ship (a mix of later Block 1 ships)
+- Added Block 2 Booster (Mostly based on B12)
+- Added Block 2 Ship (Based on Later Block 2 ships)
+- Added support for localization (only en-us so far)
+- Added Raptor 1
+- Added New Raptor 2 Shielding and Individual engine numbers
+- Added new Raptor Sounds
+- Added our own RO Compatible engine switch
+- Added Built-in RO configs
+- Added Auto-Rescaler for parts compatible with RSS and SOL
+- Added dynamic CoM, CoL and CoP updates from KSPCommunityPartModules
+- Added support for Firefly
+- Added joke patch to decouple raptor engines as an extra
+- Removed "Flap Authority Limiter" and RO-RP1 patches from extras
+- Updated Real Names patch from extras
+- Updated part categories to reflect new parts
 
 Version 2.2.0
 - Added SN5 Variant to MK-2
