@@ -295,7 +295,7 @@ namespace StarshipExpansionProject.Modules
 			for (int i = index; i < engines.Count; i++) activeEngines.Add(engines[i]);
 
 			activeEngines.ForEach(en => en.manuallyOverridden = false);
-			//activeEngines.ForEach(en => en.isEnabled = true);
+			activeEngines.ForEach(en => en.isEnabled = true);
 			activeEngines.ForEach(en => en.independentThrottle = independentThrottle);
 			activeEngines.ForEach(en => en.independentThrottlePercentage = independentThrottlePercentage);
 			activeEngines.ForEach(en => en.thrustPercentage = thrustPercentage);
