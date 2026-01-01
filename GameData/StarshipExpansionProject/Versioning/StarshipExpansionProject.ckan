@@ -6,21 +6,21 @@ depends:
   - name: KSPCommunityFixes
   - name: Harmony2
 recommends:
-  - name: StarshipExpansionProjectIVA
-  - name: StarshipLaunchExpansion
-  - name: TexturesUnlimited
-  - name: Resurfaced
-  - name: KerbalJointReinforcementNext
-suggests:
   - name: CommunityResourcePack
-  - name: ModularLaunchPads
+  - name: Resurfaced
+  - name: KerbalJointReinforcementContinued
+  - name: FlyByWireSASMode
+  - name: MechJeb2
+suggests:
+  - name: StarshipLaunchExpansion
   - name: FMRS
   - name: Trajectories
-  - name: JNSQ
-  - name: TundraExploration
+  - name: EditorExtensionsRedux
 supports:
   - name: HullcamVDSContinued
   - name: NeptuneCamera
+  - name: Firefly
+  - name: RealismOverhaul
 conflicts:
   - name: StarshipExpansionProjectIVA
-    max_version: v.3.0.0-b1
+    max_version: v.3.0.0-b7
