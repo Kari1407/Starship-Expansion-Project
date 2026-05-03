@@ -11,12 +11,11 @@ Starship Expansion Project (SEP) is a mod being developed by me, Kari, and our a
 - KSPCommunityPartModules
 - KSPCommunityFixes
 - Harmony 2
+- Community Resource Pack
 
 ### Recommended Mods:
-- Community Resource Pack (Mod is balanced around Methalox)
-- Shabby 0.4.0 or later + Resurfaced (Mod is itended with PBR materials)
+- Resurfaced (PBR materials)
 - Kerbal Joint Reinforcement Continued
-- Starship Launch Expansion
 - FlyByWire SAS Mode
 - MechJeb 2
 - Editor Extensions Redux

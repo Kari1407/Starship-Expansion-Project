@@ -1,18 +1,17 @@
 depends:
   - name: ModuleManager
+  - name: CommunityResourcePack
   - name: B9PartSwitch
   - name: Waterfall
   - name: KSPCommunityPartModules
   - name: KSPCommunityFixes
   - name: Harmony2
 recommends:
-  - name: CommunityResourcePack
   - name: Resurfaced
   - name: KerbalJointReinforcementContinued
   - name: FlyByWireSASMode
   - name: MechJeb2
 suggests:
-  - name: StarshipLaunchExpansion
   - name: FMRS
   - name: Trajectories
   - name: EditorExtensionsRedux
