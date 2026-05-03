@@ -1,23 +1,35 @@
 All thanks to Sofie, Isaquest, Janus92, Kochi, Sam, Sputnik, goob and every single member of my discord server that helped me develop this mod into existence.
 Special gratitude to Damon for mantaining and improving TundraExploration, the mod that started this all.
 
-LICENSE
-All configs are distributed under CC-NC-SA-4.0 license. All assets (all .dds, .png and .mu files) alongside with our StarshipExpansionProject.dll are distributed under an All Rights Reserved license. You may not redistribute or re-use these assets without express permission from the author. Updated on December 14th, 2025
 
 v3.2.0
-- Fix Pez Door animation on BL-2
-- Add Raptor 3
-- Tweaked values for R2 and R1
-- Fix a normal issue with BL-2 AFT Dome
-- Tweaked R3 textures and Model
-- Adjusted R3 GimbalOut range
-- Added Experimental BL-3 Cluster
+- Fix Andrew's Plume scaling
+- Fix BL-1 cluster thrust on real scale
+- Remove VaporCone
+- Delete VABO config
+- Make CRP a dependency
+- Remove Janus Solar Panel
+- Update Raptor assets and folder structures
+
+
+v3.1.0.3
 - Fix BL-1 booster chines
 - Fix typo on PBR configs for Raptor
 - Reorganized Parts Folder
 - Compatibility patch for SMURFF added
 - Changed RO raptor prop ratios from 3.55 to 3.6
 - Added support for FNB SuperHeavy Plume
+
+v3.1.0.2
+- Fix a normal issue with BL-2 AFT Dome
+- Tweaked R3 textures and Model
+- Adjusted R3 GimbalOut range
+- Added Experimental BL-3 Cluster
+
+v3.1.0.1
+- Fix Pez Door animation on BL-2
+- Add Raptor 3
+- Tweaked values for R2 and R1
 
 v3.1.0
 - Fix CKAN index by versioning things like a decent human being
