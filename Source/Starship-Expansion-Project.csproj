@@ -64,7 +64,6 @@
   <ItemGroup>
     <Compile Include="Modules\ModuleSEPEngineSwitch.cs" />
     <Compile Include="Modules\ModuleSEPProceduralEngineGUI.cs" />
-    <Compile Include="Modules\ModuleSEPVaporCone.cs" />
     <Compile Include="Modules\ModuleSEPPartSwitchAction.cs" />
     <Compile Include="Modules\ModuleSEPControlSurface.cs" />
     <Compile Include="Modules\ModuleSEPRaptor.cs" />
