@@ -2,7 +2,7 @@ All thanks to Sofie, Isaquest, Janus92, Kochi, Sam, Sputnik, goob and every sing
 Special gratitude to Damon for mantaining and improving TundraExploration, the mod that started this all.
 
 
-v3.1.1
+## 3.1.1
 - Fix cluster thrust on real scale
 - Remove VaporCone
 - Delete VABO config
@@ -14,7 +14,7 @@ v3.1.1
 - Fixed GridFins Aero
 
 
-v3.1.0.3
+## 3.1.0.3
 - Fix BL-1 booster chines
 - Fix typo on PBR configs for Raptor
 - Reorganized Parts Folder
@@ -22,22 +22,22 @@ v3.1.0.3
 - Changed RO raptor prop ratios from 3.55 to 3.6
 - Added support for FNB SuperHeavy Plume
 
-v3.1.0.2
+## 3.1.0.2
 - Fix a normal issue with BL-2 AFT Dome
 - Tweaked R3 textures and Model
 - Adjusted R3 GimbalOut range
 - Added Experimental BL-3 Cluster
 
-v3.1.0.1
+## 3.1.0.1
 - Fix Pez Door animation on BL-2
 - Add Raptor 3
 - Tweaked values for R2 and R1
 
-v3.1.0
+## 3.1.0
 - Fix CKAN index by versioning things like a decent human being
 - Fix BL-2 core mesh issue
 
-v3.0.0
+## 3.0.0
 - Added KSPCommunityPartModules, KSPCommunityFixes and Harmony 2 as dependencies
 - Removed TundraExploration as a soft dependency
 - Revamped cluster engine selection module
@@ -61,7 +61,7 @@ v3.0.0
 - Updated Real Names patch from extras
 - Updated part categories to reflect new parts
 
-v2.2.0
+## 2.2.0
 - Added SN5 Variant to MK-2
 - Added Starhopper
 - Added Structural Part
@@ -79,7 +79,7 @@ v2.2.0
 - Fixed (hopefully) QD docking
 - Updated RCS FX by Fossil
 
-v2.1.0
+## 2.1.0
 - Updated MK-1 Parts (old crafts do not work anymore)
 - Joined interstage and booster core parts into 1
 - Added HotStage Ring variant for booster
@@ -92,17 +92,17 @@ v2.1.0
 - Added Donnager MK-2 (SN Ship)
 - Added non-essential parts by janus
 
-v2.0.3
+## 2.0.3
 - Fixed Untextured cluster engines
 - Updated RO patches
 - Increased RCS thrust on ship and booster
 - Updated Plumes (Pre IFT-2)
 
-v2.0.2
+## 2.0.2
 - Fixed Cluster staging icon not disappearing when all engines are disabled
 - Fixed incompatibility with MechJeb Primer Vector Guidance
 
-v2.0.1
+## 2.0.1
 
 - Increased MaxTemp on all ship parts
 - Fixed Ship RCS misaligned
@@ -114,7 +114,7 @@ v2.0.1
 - Fixed Engine plumes (RO)
 - Fixed Vent on booster core (RO)
 
-v2.0.0
+## 2.0.0
 
 - Completely overhaul of all parts, more details below
 - Added IVA by Janus92
@@ -132,7 +132,7 @@ v2.0.0
 - Updated Raptor Engines to be closer to Raptor 2
 - Unified Booster Engine Cluster with a custom plugin to a single part
 
-v1.0.1 
+## 1.0.1 
 
 - Fixed TU being applied to cluster raptors
 - Fixed a few descriptions
@@ -140,7 +140,7 @@ v1.0.1
 - Fixed RO vents Exploding
 - Fixed plugin name
 
-v1.0.0 
+## 1.0.0 
 
 - Official Release
 
