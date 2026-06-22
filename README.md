@@ -11,10 +11,10 @@ Starship Expansion Project (SEP) is a mod being developed by me, Kari, and our a
 - KSPCommunityPartModules
 - KSPCommunityFixes
 - Harmony 2
+- Shabby
 - Community Resource Pack
 
 ### Recommended Mods:
-- Resurfaced (PBR materials)
 - Kerbal Joint Reinforcement Continued
 - FlyByWire SAS Mode
 - MechJeb 2
@@ -37,7 +37,7 @@ https://discord.gg/CQzk9H84pr
 - Stock staging readings reads only part of cluster thrust data. Use KER or MJ instead
 
 ## LICENSE
-All configs are distributed under CC-NC-SA-4.0 license. 
-All assets (all .dds, .png and .mu files) alongside with our StarshipExpansionProject.dll are distributed under an All Rights Reserved license. 
+All art assets (all .dds, .png and .mu files) alongside with our StarshipExpansionProject.dll are distributed under an All Rights Reserved license. 
+Everything else is under GPL license.
 
 You may not redistribute or re-use these assets without express permission from the author. Updated on December 14th, 2025

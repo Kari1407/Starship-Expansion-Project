@@ -3,13 +3,15 @@ Special gratitude to Damon for mantaining and improving TundraExploration, the m
 
 
 v3.2.0
-- Fix Andrew's Plume scaling
-- Fix BL-1 cluster thrust on real scale
+- Fix cluster thrust on real scale
 - Remove VaporCone
 - Delete VABO config
-- Make CRP a dependency
+- Make CRP and Shabby dependencies
 - Remove Janus Solar Panel
 - Update Raptor assets and folder structures
+- Added Custom Shader to implement AOMap on parts (Raptors currently)
+- Slightly updated  metallic materials
+- Fixed GridFins Aero
 
 
 v3.1.0.3

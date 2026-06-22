@@ -6,8 +6,8 @@ depends:
   - name: KSPCommunityPartModules
   - name: KSPCommunityFixes
   - name: Harmony2
+  - name: Shabby
 recommends:
-  - name: Resurfaced
   - name: KerbalJointReinforcementContinued
   - name: FlyByWireSASMode
   - name: MechJeb2
