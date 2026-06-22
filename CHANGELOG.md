@@ -3,8 +3,13 @@
 All thanks to Sofie, Isaquest, Janus92, Kochi, Sam, Sputnik, goob and every single member of my discord server that helped me develop this mod into existence.
 Special gratitude to Damon for mantaining and improving TundraExploration, the mod that started this all.
 
+## 3.1.1 - 2026-06-22
+
+There is nothing permanent except change
+
 
 ## 3.1.1
+
 - Fix cluster thrust on real scale
 - Remove VaporCone
 - Delete VABO config
@@ -17,6 +22,7 @@ Special gratitude to Damon for mantaining and improving TundraExploration, the m
 
 
 ## 3.1.0.3
+
 - Fix BL-1 booster chines
 - Fix typo on PBR configs for Raptor
 - Reorganized Parts Folder
@@ -24,22 +30,30 @@ Special gratitude to Damon for mantaining and improving TundraExploration, the m
 - Changed RO raptor prop ratios from 3.55 to 3.6
 - Added support for FNB SuperHeavy Plume
 
+
 ## 3.1.0.2
+
 - Fix a normal issue with BL-2 AFT Dome
 - Tweaked R3 textures and Model
 - Adjusted R3 GimbalOut range
 - Added Experimental BL-3 Cluster
 
+
 ## 3.1.0.1
+
 - Fix Pez Door animation on BL-2
 - Add Raptor 3
 - Tweaked values for R2 and R1
 
+
 ## 3.1.0
+
 - Fix CKAN index by versioning things like a decent human being
 - Fix BL-2 core mesh issue
 
+
 ## 3.0.0
+
 - Added KSPCommunityPartModules, KSPCommunityFixes and Harmony 2 as dependencies
 - Removed TundraExploration as a soft dependency
 - Revamped cluster engine selection module
@@ -63,7 +77,9 @@ Special gratitude to Damon for mantaining and improving TundraExploration, the m
 - Updated Real Names patch from extras
 - Updated part categories to reflect new parts
 
+
 ## 2.2.0
+
 - Added SN5 Variant to MK-2
 - Added Starhopper
 - Added Structural Part
@@ -81,7 +97,9 @@ Special gratitude to Damon for mantaining and improving TundraExploration, the m
 - Fixed (hopefully) QD docking
 - Updated RCS FX by Fossil
 
+
 ## 2.1.0
+
 - Updated MK-1 Parts (old crafts do not work anymore)
 - Joined interstage and booster core parts into 1
 - Added HotStage Ring variant for booster
@@ -94,15 +112,20 @@ Special gratitude to Damon for mantaining and improving TundraExploration, the m
 - Added Donnager MK-2 (SN Ship)
 - Added non-essential parts by janus
 
+
 ## 2.0.3
+
 - Fixed Untextured cluster engines
 - Updated RO patches
 - Increased RCS thrust on ship and booster
 - Updated Plumes (Pre IFT-2)
 
+
 ## 2.0.2
+
 - Fixed Cluster staging icon not disappearing when all engines are disabled
 - Fixed incompatibility with MechJeb Primer Vector Guidance
+
 
 ## 2.0.1
 
@@ -111,10 +134,10 @@ Special gratitude to Damon for mantaining and improving TundraExploration, the m
 - Improved QoL on patches
 - Changed crew windows lights to white from yellow
 - Fixed Specular textures not loading on default ksp shader
-
 - Added extra patch for fixing booster cluster thrust while using LRTR with Rescaling on
 - Fixed Engine plumes (RO)
 - Fixed Vent on booster core (RO)
+
 
 ## 2.0.0
 
@@ -134,7 +157,8 @@ Special gratitude to Damon for mantaining and improving TundraExploration, the m
 - Updated Raptor Engines to be closer to Raptor 2
 - Unified Booster Engine Cluster with a custom plugin to a single part
 
-## 1.0.1 
+
+## 1.0.1
 
 - Fixed TU being applied to cluster raptors
 - Fixed a few descriptions
@@ -142,7 +166,8 @@ Special gratitude to Damon for mantaining and improving TundraExploration, the m
 - Fixed RO vents Exploding
 - Fixed plugin name
 
-## 1.0.0 
+
+## 1.0.0
 
 - Official Release
 
@@ -150,4 +175,3 @@ v0.*
 
 - First commit, Revamps, a lot of mistakes and bug fixes
 - Just a lot of stuff that I can't write here
-

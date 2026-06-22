@@ -1,0 +1,26 @@
+{
+    "NAME": "Starship Expansion Project",
+    "DOWNLOAD": "https://github.com/Kari1407/Starship-Expansion-Project/releases",
+    "URL": "https://github.com/Kari1407/Starship-Expansion-Project/tree/main/GameData/StarshipExpansionProject/Versioning/StarshipExpansionProject.version",
+    "VERSION": {
+        "MAJOR": 3,
+        "MINOR": 1,
+        "PATCH": 1,
+        "BUILD": 0
+    },
+    "KSP_VERSION": {
+        "MAJOR": 1,
+        "MINOR": 12,
+        "PATCH": 5
+    },
+    "KSP_VERSION_MIN": {
+        "MAJOR": 1,
+        "MINOR": 12,
+        "PATCH": 5
+    },
+    "KSP_VERSION_MAX": {
+        "MAJOR": 1,
+        "MINOR": 12,
+        "PATCH": 99
+    }
+}
