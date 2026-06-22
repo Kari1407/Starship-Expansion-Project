@@ -2,7 +2,7 @@ All thanks to Sofie, Isaquest, Janus92, Kochi, Sam, Sputnik, goob and every sing
 Special gratitude to Damon for mantaining and improving TundraExploration, the mod that started this all.
 
 
-v3.2.0
+v3.1.0.4
 - Fix cluster thrust on real scale
 - Remove VaporCone
 - Delete VABO config
