@@ -12,6 +12,5 @@ jobs:
     uses: KSPModdingLibs/KSPBuildTools/.github/workflows/create-release.yml@1.1.1
     with:
       solution-file-path: 'Source/Starship-Expansion-Project.sln'
-      use-ckan: true
       version-string: ${{ inputs.version-string }}
       artifacts: GameData README* CHANGELOG* Extras
