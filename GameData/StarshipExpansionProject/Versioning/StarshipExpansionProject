@@ -4,8 +4,8 @@
     "URL": "https://github.com/Kari1407/Starship-Expansion-Project/tree/main/GameData/StarshipExpansionProject/Versioning/StarshipExpansionProject.version",
     "VERSION": {
         "MAJOR": 3,
-        "MINOR": 1,
-        "PATCH": 1,
+        "MINOR": 2,
+        "PATCH": 0,
         "BUILD": 0
     },
     "KSP_VERSION": {

@@ -3,9 +3,10 @@
 All thanks to Sofie, Isaquest, Janus92, Kochi, Sam, Sputnik, goob and every single member of my discord server that helped me develop this mod into existence.
 Special gratitude to Damon for mantaining and improving TundraExploration, the mod that started this all.
 
-## Unreleased
+## 3.2.0 - 2026-07-07
 
 - Fix SEP_24_MK3_BOOSTER_CORE_4_BASE and SEP_24_MK3_BOOSTER_CORE_4_NRM textures with the wrong base material
+
 
 ## 3.1.1 - 2026-06-22
 
