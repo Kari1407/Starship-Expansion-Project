@@ -3,20 +3,30 @@
 All thanks to Sofie, Isaquest, Janus92, Kochi, Sam, Sputnik, goob and every single member of my discord server that helped me develop this mod into existence.
 Special gratitude to Damon for mantaining and improving TundraExploration, the mod that started this all.
 
+
+## Unreleased
+
+
 ## 3.2.3 - 2026-08-21
 
-There is nothing permanent except change
+- Updated RO/Real Scale patches
+- Fixed Grid Fin behavior
+- Adjusted MaxFOV on BL-3 Ship AFT cams
+- Fix BL-3 Booster Raptor CAM
+- Added FNB's Raptor 3, Clusters and HSR plumes
 
 
 ## 3.2.2 - 2026-08-19
 
-There is nothing permanent except change
+- Updated Materials
+- Fixed Waterfall RCS/Vents orientation
+- Added Block 3
 
 
 ## 3.2.1 - 2026-07-07
 
-There is nothing permanent except change
-
+- Fix SEP_24_MK3_BOOSTER_CORE_4_BASE and SEP_24_MK3_BOOSTER_CORE_4_NRM textures with the wrong base material
+- Revert flap rotation was not even supposed to go out
 
 ## 3.2.0 - 2026-07-07
 
