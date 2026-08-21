@@ -62,6 +62,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Modules\ModuleEngineStartupTimer.cs" />
     <Compile Include="Modules\ModuleSEPEngineSwitch.cs" />
     <Compile Include="Modules\ModuleSEPProceduralEngineGUI.cs" />
     <Compile Include="Modules\ModuleSEPPartSwitchAction.cs" />
