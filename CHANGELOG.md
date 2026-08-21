@@ -3,6 +3,11 @@
 All thanks to Sofie, Isaquest, Janus92, Kochi, Sam, Sputnik, goob and every single member of my discord server that helped me develop this mod into existence.
 Special gratitude to Damon for mantaining and improving TundraExploration, the mod that started this all.
 
+## 3.2.3 - 2026-08-21
+
+There is nothing permanent except change
+
+
 ## 3.2.2 - 2026-08-19
 
 There is nothing permanent except change
