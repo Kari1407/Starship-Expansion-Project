@@ -57,10 +57,6 @@ namespace StarshipExpansionProject
                 if (e.EngineIgnited)
                     return true;
 
-            foreach (var e in enginesFX)
-                if (e.EngineIgnited)
-                    return true;
-
             return false;
         }
 
@@ -78,7 +74,7 @@ namespace StarshipExpansionProject
 
         private void HideEnginePAW(string idToHide)
         {
-            foreach (var engine in enginesFX)
+            foreach (var engine in engines)
             {
                 if (engine.engineID == idToHide)
                 {
