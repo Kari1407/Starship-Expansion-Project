@@ -2,90 +2,100 @@
 using UnityEngine;
 using Waterfall;
 
-public class ModuleEngineStartupTimer : PartModule
+namespace StarshipExpansionProject
 {
-    /* ===============================
-     *  Public Debug
-     * =============================== */
-    [KSPField(guiActive = true, guiName = "EngineStartup")]
-    public float engineStartup = 0f;
-
-    [KSPField(guiActive = true, guiName = "Started")]
-    public bool started = false;
-
-    /* ===============================
-     *  Internal
-     * =============================== */
-    ModuleEngines[] engines;
-    ModuleEnginesFX[] enginesFX;
-    ModuleWaterfallFX[] waterFX;
-
-    float timer = 0f;
-    const float duration = 10f; // seconds
-
-    /* ===============================
-     *  Lifecycle
-     * =============================== */
-    public override void OnStart(StartState state)
+    public class ModuleEngineStartupTimer : PartModule
     {
-        base.OnStart(state);
+        [KSPField(guiActive = true, guiName = "EngineStartup")]
+        public float engineStartup = 0f;
 
-        engines = part.FindModulesImplementing<ModuleEngines>().ToArray();
-        enginesFX = part.FindModulesImplementing<ModuleEnginesFX>().ToArray();
-        waterFX = part.FindModulesImplementing<ModuleWaterfallFX>().ToArray();
-    }
+        [KSPField(guiActive = true, guiName = "Started")]
+        public bool started = false;
 
-    public void FixedUpdate()
-    {
-        if (!HighLogic.LoadedSceneIsFlight)
-            return;
+        [KSPField]
+         public string targetEngineID = "hotstage";
 
-        /* ===============================
-         *  Detect first ignition
-         * =============================== */
-        if (!started && EngineIsRunning())
+        ModuleEngines[] engines;
+        ModuleWaterfallFX[] waterFX;
+
+        float timer = 0f;
+        const float duration = 10f; // seconds
+
+        public override void OnStart(StartState state)
         {
-            started = true;
-            timer = 0f;
+            base.OnStart(state);
+
+            engines = part.FindModulesImplementing<ModuleEngines>().ToArray();
+            waterFX = part.FindModulesImplementing<ModuleWaterfallFX>().ToArray();
+            
+            HideEnginePAW(targetEngineID);
         }
 
-        /* ===============================
-         *  Progress timer
-         * =============================== */
-        if (started && engineStartup < 10f)
+        public void FixedUpdate()
         {
-            timer += Time.fixedDeltaTime;
-            engineStartup = Mathf.Clamp(timer / duration * 10f, 0f, 10f);
+            if (!HighLogic.LoadedSceneIsFlight)
+                return;
+
+            if (!started && EngineIsRunning())
+            {
+                started = true;
+                timer = 0f;
+            }
+
+            if (started && engineStartup < 10f)
+            {
+                timer += Time.fixedDeltaTime;
+                engineStartup = Mathf.Clamp(timer / duration * 10f, 0f, 10f);
+            }
+
+            PushToWaterfall();
         }
 
-        PushToWaterfall();
-    }
-
-    /* ===============================
-     *  Helpers
-     * =============================== */
-    bool EngineIsRunning()
-    {
-        foreach (var e in engines)
-            if (e.EngineIgnited)
-                return true;
-
-        foreach (var e in enginesFX)
-            if (e.EngineIgnited)
-                return true;
-
-        return false;
-    }
-
-    void PushToWaterfall()
-    {
-        foreach (var fx in waterFX)
+        bool EngineIsRunning()
         {
-            var c = fx.Controllers
-                .FirstOrDefault(x => x.name == "engineStartup");
+            foreach (var e in engines)
+                if (e.EngineIgnited)
+                    return true;
 
-            if (c != null)
-                c.Set(engineStartup);
+            foreach (var e in enginesFX)
+                if (e.EngineIgnited)
+                    return true;
+
+            return false;
+        }
+
+        void PushToWaterfall()
+        {
+            foreach (var fx in waterFX)
+            {
+                var c = fx.Controllers
+                    .FirstOrDefault(x => x.name == "engineStartup");
+
+                if (c != null)
+                    c.Set(engineStartup);
+            }
+        }
+
+        private void HideEnginePAW(string idToHide)
+        {
+            foreach (var engine in enginesFX)
+            {
+                if (engine.engineID == idToHide)
+                {
+                    foreach (BaseField field in engine.Fields)
+                    {
+                        field.guiActive = false;
+                        field.guiActiveEditor = false;
+                    }
+                    foreach (BaseEvent evt in engine.Events)
+                    {
+                        evt.active = false;
+                        evt.guiActive = false;
+                        evt.guiActiveEditor = false;
+                    }
+                    break;
+                }
+            }
         }
     }
 }
