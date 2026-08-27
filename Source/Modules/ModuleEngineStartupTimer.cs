@@ -6,10 +6,10 @@ namespace StarshipExpansionProject
 {
     public class ModuleEngineStartupTimer : PartModule
     {
-        [KSPField(guiActive = true, guiName = "EngineStartup")]
+        [KSPField(guiActive = false, guiName = "EngineStartup")]
         public float engineStartup = 0f;
 
-        [KSPField(guiActive = true, guiName = "Started")]
+        [KSPField(guiActive = false, guiName = "Started")]
         public bool started = false;
 
         [KSPField]
