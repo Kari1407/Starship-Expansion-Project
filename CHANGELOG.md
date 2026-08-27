@@ -5,6 +5,19 @@ Special gratitude to Damon for mantaining and improving TundraExploration, the m
 
 ## 3.2.4 - 2026-08-23
 
+- Reduced some texture sizes to decrease used space
+- Fixed BL-3 AFT aerocover being in the wrong position
+- Updated Drag Cubes for BL-3 booster
+- Updated Mass and Volumes for all Vehicles
+- Fixed BL-3 Cluster Select Engines not working
+
+## 3.2.4 - 2026-08-23
+
+- Updated Real Scale patches once again
+- Fixed plume rescaling again
+- Tweaked FAR patch
+- Activated a node for Pez dispenser (dispenser not included)
+- Tweaked engine thrust calc for BL-3 Cluster
 
 ## 3.2.3 - 2026-08-21
 
