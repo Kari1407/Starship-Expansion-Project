@@ -3,19 +3,19 @@
 All thanks to Sofie, Isaquest, Janus92, Kochi, Sam, Sputnik, goob and every single member of my discord server that helped me develop this mod into existence.
 Special gratitude to Damon for mantaining and improving TundraExploration, the mod that started this all.
 
+## Unreleased
+
+- Updated Shader
+- Updated RO patches for BL-1 and BL-2
+- Add option to revert flap angles to default and activate pitch yaw and roll (useful after using the landing angles)
+
 ## 3.3.0 - 2026-08-27
-
-There is nothing permanent except change
-
-
-## 3.2.4 - 2026-08-23
 
 - Reduced some texture sizes to decrease used space
 - Fixed BL-3 AFT aerocover being in the wrong position
 - Updated Drag Cubes for BL-3 booster
 - Updated Mass and Volumes for all Vehicles
 - Fixed BL-3 Cluster Select Engines not working
-
 
 ## 3.2.4 - 2026-08-23
 

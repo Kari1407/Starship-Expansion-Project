@@ -163,6 +163,15 @@ namespace StarshipExpansionProject
             ignoreRoll = true;
         }
 
+        [KSPAction(guiName = "#LOC_SEP_RevertFlapAngles")]
+        public void RevertFlapAngles(KSPActionParam param)
+        {
+            deployAngle = ctrlSurfaceDeployRange.z;
+            ignorePitch = false;
+            ignoreYaw = false;
+            ignoreRoll = false;
+        }
+
 
         #endregion
 
