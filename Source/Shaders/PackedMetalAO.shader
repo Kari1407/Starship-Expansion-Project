@@ -18,10 +18,9 @@
         _BumpMap ("Bumpmap", 2D) = "normal" {}
 
         _AOMap("AOMap", 2D) = "white" {}
-        _AOness ("AOness", Range(0,1)) = 1.0
-        _AORedMult("AOness Red Multiplier", Range(0,1)) = 0.0
-        _AOGreenMult("AOness Green Multiplier", Range(0,1)) = 0.0
-        _AOBlueMult("AOness Blue Multiplier", Range(0,1)) = 0.0
+        _AORedMult("AO Red Multiplier", Range(0,1)) = 0.0
+        _AOGreenMult("AO Green Multiplier", Range(0,1)) = 0.0
+        _AOBlueMult("AO Blue Multiplier", Range(0,1)) = 0.0
 
         _Emissive("Emission",2D) = "black" {}
         _EmissiveColor("Emission Color",Color) = (0,0,0,0)
@@ -71,14 +70,12 @@
         half _MetalRedMult;
         half _MetalGreenMult;
         half _MetalBlueMult;
-        half _AOness;
         half _AORedMult;
         half _AOGreenMult;
         half _AOBlueMult;
         
         
         fixed4 _EmissiveColor;
-
         fixed4 _RimColor;
         fixed4 _TemperatureColor;
 
@@ -89,7 +86,7 @@
             fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
             fixed4 m = tex2D (_MetalMap, IN.uv_MainTex);
             fixed4 e = tex2D (_Emissive, IN.uv_MainTex) * _EmissiveColor;
-            fixed4 ao = tex2D(_AOMap, IN.uv_MainTex);
+            fixed4 ao = tex2D (_AOMap, IN.uv_MainTex);
 
             half rim = 1.0 - saturate(dot(normalize(IN.viewDir), o.Normal));
 
@@ -98,7 +95,7 @@
             o.Smoothness = c.a * _Smoothness;
             o.Emission = (e * e.a) + (_RimColor.rgb * rim * RIM_MULT * _RimColor.a) + (_TemperatureColor.rgb * _TemperatureColor.a);
             o.Alpha = c.a;
-            o.Occlusion = saturate((ao.r * _AORedMult) +  (ao.g * _AOGreenMult) + (ao.b * _AOBlueMult)) * _AOness;
+            o.Occlusion = saturate((ao.r * _AORedMult) +  (ao.g * _AOGreenMult) + (ao.b * _AOBlueMult));
             o.Normal = UnpackNormalDXT5nm (tex2D (_BumpMap, IN.uv_BumpMap));
         }
         ENDCG
