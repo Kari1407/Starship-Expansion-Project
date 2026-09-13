@@ -5,7 +5,7 @@ Special gratitude to Damon for mantaining and improving TundraExploration, the m
 
 ## Unreleased
 
-- Updated Shader
+- Fixed Shader not working on OpenGL
 - Updated RO patches for BL-1 and BL-2
 - Add option to revert flap angles to default and activate pitch yaw and roll (useful after using the landing angles)
 
