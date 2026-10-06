@@ -3,6 +3,13 @@
 All thanks to Sofie, Isaquest, Janus92, Kochi, Sam, Sputnik, goob and every single member of my discord server that helped me develop this mod into existence.
 Special gratitude to Damon for mantaining and improving TundraExploration, the mod that started this all.
 
+## Unreleased
+
+- Updated Extended Ablative
+- Fixed Tiles NRM map (BL3)
+- Fixed Right AFT Flap Constraints
+- Fixed ModuleSurfaceFX with incorrect settings on BL3 Cluster
+
 ## 3.3.1 - 2026-09-13
 
 - Fixed Shader not working on OpenGL
