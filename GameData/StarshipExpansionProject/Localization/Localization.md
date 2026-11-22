@@ -7,7 +7,7 @@ If you want to help us translate this mod follow this quick guide to get started
 To create a translation for your language, make a copy of the file *en_us.cfg* and name
 them accordingly to your language:
 
-* Chinese (zh-cn)
+* ~~Chinese (zh-cn)~~
 * Deutsch (de-de)
 * ~~French (fr-fr)~~
 * Italian (it-it)
@@ -27,4 +27,5 @@ Please avoid using translators and/or AI, we will give preference for native/flu
 
 ## Translation Credits
 
-Mathieu Relmy (houahoua on Discord) - French (fr-fr)
+1. Mathieu Relmy (houahoua on Discord) - Français (fr-fr)
+2. niruige13 - 中文 (zh-cn)
